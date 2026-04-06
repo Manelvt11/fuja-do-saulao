@@ -2,10 +2,10 @@ import pygame
 
 class Player:
     def __init__(self, x, y, velocidade):
-        self.rect = pygame.Rect(x, y + 40, 80, 90)
+        self.rect = pygame.Rect(x, y , 80, 90)
         self.velocidade = velocidade
 
-        self.imagem = pygame.image.load("assets/player.png").convert_alpha()
+        self.imagem = pygame.image.load("assets/img/player.png").convert_alpha()
         self.imagem = pygame.transform.scale(self.imagem, (150, 140))
 
     def mover(self, obstaculos):
