@@ -2,16 +2,14 @@ import pygame
 
 class Player:
     def __init__(self, x, y, velocidade):
-        self.rect = pygame.Rect(x, y , 80, 90)
+        self.rect = pygame.Rect(x, y + 40 , 60, 50)
         self.velocidade = velocidade
 
-        self.imagem = pygame.image.load("assets/img/player.png").convert_alpha()
+        self.imagem = pygame.image.load("jogo/assets/player/player.png").convert_alpha()
         self.imagem = pygame.transform.scale(self.imagem, (150, 140))
 
     def mover(self, obstaculos):
         teclado = pygame.key.get_pressed()
-
-        posicao_antiga_x = self.rect.x
 
         if teclado[pygame.K_LEFT]:
             self.rect.x -= self.velocidade
@@ -21,9 +19,11 @@ class Player:
 
         for obs in obstaculos:
             if self.rect.colliderect(obs):
-                self.rect.x = posicao_antiga_x
+                if teclado[pygame.K_RIGHT]:
+                    self.rect.right = obs.left
 
-        posicao_antiga_y = self.rect.y
+                if teclado[pygame.K_LEFT]:
+                    self.rect.left = obs.right
 
         if teclado[pygame.K_UP]:
             self.rect.y -= self.velocidade
@@ -33,7 +33,11 @@ class Player:
 
         for obs in obstaculos:
             if self.rect.colliderect(obs):
-                self.rect.y = posicao_antiga_y
+                if teclado[pygame.K_DOWN]:
+                    self.rect.bottom = obs.top
+
+                if teclado[pygame.K_UP]:
+                    self.rect.top = obs.bottom
 
         if self.rect.left < 20:
             self.rect.left = 20
@@ -49,4 +53,7 @@ class Player:
 
 
     def desenhar(self, tela):
-        tela.blit(self.imagem, (self.rect.x - 30, self.rect.y - 40))
+        imagem_rect = self.imagem.get_rect(midbottom=self.rect.midbottom)
+        tela.blit(self.imagem, imagem_rect.topleft)
+
+        pygame.draw.rect(tela, (255, 0, 0), self.rect, 2)
