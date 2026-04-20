@@ -1,45 +1,39 @@
 import pygame
-from player import Player
+from jogo.player import Player
+from jogo.map import Map
+import random
 
 pygame.init()
 
-tela = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Fuja do Saulão")
+LARGURA = 800
+ALTURA = 600
 
-fundo = pygame.image.load("jogo/assets/cenario/lab.png").convert()
-novo_tamanho_fundo = (800, 600)
-fundo_redimensionado = pygame.transform.scale(fundo, novo_tamanho_fundo)
+# tela base
+tela_base = pygame.Surface((LARGURA, ALTURA))
+
+# tela real
+tela = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+largura_tela, altura_tela = tela.get_size()
+
+pygame.display.set_caption("Fuja do Saulão")
 
 clock = pygame.time.Clock()
 FPS = 60
 
-LARGURA = 800
-ALTURA = 600
-TOPO = 180
-BAIXO = 600
+# posição inicial
+x = LARGURA // 2
+y = ALTURA // 2
 
-largura_player = 150
-altura_player = 140
-altura_area = BAIXO - TOPO
+player = Player(x, y, 3)
 
-x = LARGURA // 2 - largura_player // 2
-y = TOPO + (altura_area // 2) - altura_player // 2
+# obstáculos
+mapa = Map()
 
-player = Player(x, y, 5)
+luz = pygame.Surface((300, 300), pygame.SRCALPHA)
 
-mesa1 = pygame.Rect(142, 230, 200, 95)  # mesa de cima esquerda
-mesa2 = pygame.Rect(455, 230, 200, 95)  # mesa de cima direita
-
-mesa3 = pygame.Rect(140, 420, 205, 90)  # baixo esquerda
-mesa4 = pygame.Rect(455, 420, 200, 90)  # baixo direita
-
-parede_cima = pygame.Rect(0, 154, 800, 20)
-parede_baixo = pygame.Rect(0, 560, 800, 40)
-
-parede_esquerda = pygame.Rect(0, 0, 60, 600)
-parede_direita = pygame.Rect(740, 0, 40, 600)
-
-obstaculos = [mesa1, mesa2, mesa3, mesa4, parede_cima, parede_baixo, parede_direita, parede_esquerda]
+for i in range(150, 0, -1):
+    alpha = int(i * 1.7)
+    pygame.draw.circle(luz, (0, 0, 0, 255 - alpha), (150, 150), i)
 
 rodando = True
 while rodando:
@@ -47,16 +41,40 @@ while rodando:
         if evento.type == pygame.QUIT:
             rodando = False
 
-    tela.blit(fundo_redimensionado, (0, 0))
+        if evento.type == pygame.KEYDOWN:
+            if evento.key == pygame.K_ESCAPE:
+                rodando = False
 
-    player.mover(obstaculos)
-    player.desenhar(tela)
+    tela_base.fill((0, 0, 0))
+    mapa.desenhar(tela_base)
 
-    for obs in obstaculos:
-        pygame.draw.rect(tela, (255, 0, 0), obs)
+    player.mover(mapa.obstaculos)
+    player.desenhar(tela_base)
+
+    DEBUG = False
+
+    if DEBUG:
+        mapa.desenhar_debug(tela_base)
+
+    #iluminação
+    dark = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+    
+    flicker = random.randint(-10, 10)
+
+    dark.fill((0, 0, 0, 140 + flicker))
+
+    dark.blit(
+        luz,
+        (player.rect.centerx - 150, player.rect.centery - 150),
+        special_flags=pygame.BLEND_RGBA_SUB
+    )
+
+    tela_base.blit(dark, (0, 0))
+
+    tela_escalada = pygame.transform.scale(tela_base, (largura_tela, altura_tela))
+    tela.blit(tela_escalada, (0, 0))
 
     pygame.display.flip()
-
     clock.tick(FPS)
 
 pygame.quit()
