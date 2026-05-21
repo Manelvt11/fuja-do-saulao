@@ -1,6 +1,6 @@
 import pygame
-from jogo.player import Player
-from jogo.map import Map
+from player import Player
+from map import Map
 import random
 
 pygame.init()

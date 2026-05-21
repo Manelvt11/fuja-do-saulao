@@ -1,10 +1,18 @@
 import pygame
+from personagens import Personagem
 
-class Player:
+#classe filha
+#A classe Benicio herda atributos e métodos da classe Personagem
+#Além das características herdadas, Benício possui:
+#sprites
+#animação
+#direção
+#controle pelo teclado
+
+class Benício(Personagem):
     def __init__(self, x, y, velocidade):
-        self.rect = pygame.Rect(x, y, 35, 18)
 
-        self.velocidade = velocidade
+        super().__init__(x, y, 35, 18, velocidade)
 
         self.sheet = pygame.image.load("jogo/assets/player/spritesheet.png").convert_alpha()
 
@@ -27,7 +35,8 @@ class Player:
             "direita": 3
         }
 
-    def mover(self, obstaculos):
+    #movimentacao com teclado
+    def controlar(self, obstaculos):
         teclas = pygame.key.get_pressed()
 
         dx = 0
@@ -49,26 +58,8 @@ class Player:
             dy += self.velocidade
             self.direcao = "baixo"
 
-        # movimento X
-        self.rect.x += dx
-        for obs in obstaculos:
-            if self.rect.colliderect(obs):
-                if dx > 0:
-                    self.rect.right = obs.left
-                if dx < 0:
-                    self.rect.left = obs.right
-
-        # movimento Y
-        self.rect.y += dy
-        for obs in obstaculos:
-            if self.rect.colliderect(obs):
-                if dy > 0:
-                    self.rect.bottom = obs.top
-                if dy < 0:
-                    self.rect.top = obs.bottom
-
-        # limites
-        self.rect.clamp_ip(pygame.Rect(20, 20, 760, 540))
+        #metodo mover() herdado da classe pai
+        super().mover(dx, dy, obstaculos)
 
         # animação
         if dx != 0 or dy != 0:
