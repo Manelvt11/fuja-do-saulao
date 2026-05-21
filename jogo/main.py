@@ -1,5 +1,5 @@
 import pygame
-from player import Player
+from player import Benício
 from map import Map
 import random
 
@@ -24,16 +24,21 @@ FPS = 60
 x = LARGURA // 2
 y = ALTURA // 2
 
-player = Player(x, y, 3)
+player = Benício(x, y, 3)
 
 # obstáculos
 mapa = Map()
 
 luz = pygame.Surface((300, 300), pygame.SRCALPHA)
 
-for i in range(150, 0, -1):
-    alpha = int(i * 1.7)
-    pygame.draw.circle(luz, (0, 0, 0, 255 - alpha), (150, 150), i)
+for raio in range(150, 0, -1):
+    transparencia = int(raio * 1.7)
+
+    pygame.draw.circle(luz, 
+                       (0, 0, 0, 255 - transparencia), 
+                       (150, 150), 
+                       raio
+    )
 
 rodando = True
 while rodando:
@@ -48,7 +53,7 @@ while rodando:
     tela_base.fill((0, 0, 0))
     mapa.desenhar(tela_base)
 
-    player.mover(mapa.obstaculos)
+    player.controlar(mapa.obstaculos)
     player.desenhar(tela_base)
 
     DEBUG = False
