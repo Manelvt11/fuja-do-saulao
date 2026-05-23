@@ -12,7 +12,7 @@ from personagens import Personagem
 class Benício(Personagem):
     def __init__(self, x, y, velocidade):
 
-        super().__init__(x, y, 35, 18, velocidade)
+        super().__init__(x, y, 40, 40, velocidade)
 
         self.sheet = pygame.image.load("jogo/assets/player/spritesheet.png").convert_alpha()
 
@@ -58,19 +58,22 @@ class Benício(Personagem):
             dy += self.velocidade
             self.direcao = "baixo"
 
-        #metodo mover() herdado da classe pai
+        if dx != 0 and dy != 0:
+            dx = int(dx * 0.7071)
+            dy = int(dy * 0.7071)
+
         super().mover(dx, dy, obstaculos)
 
         # animação
-        if dx != 0 or dy != 0:
-            self.tempo_animacao += 1
+        #if dx != 0 or dy != 0:
+        #    self.tempo_animacao += 1
 
-            if self.tempo_animacao >= self.velocidade_animacao:
-                self.frame_atual = (self.frame_atual + 1) % self.frames_por_linha
-                self.tempo_animacao = 0
+        #    if self.tempo_animacao >= self.velocidade_animacao:
+        #        self.frame_atual = (self.frame_atual + 1) % self.frames_por_linha
+        #        self.tempo_animacao = 0
 
-        else:
-            self.frame_atual = 0
+        #else:
+            #self.frame_atual = 0
 
     def desenhar(self, tela):
         linha = self.direcoes[self.direcao]
@@ -99,3 +102,6 @@ class Benício(Personagem):
         pygame.draw.ellipse(sombra, (0, 0, 0, 100), sombra.get_rect())
 
         tela.blit(sombra, (self.rect.centerx - 25, self.rect.bottom - 5))
+
+        #debug da hitbox
+        pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)

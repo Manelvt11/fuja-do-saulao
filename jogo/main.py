@@ -22,9 +22,9 @@ FPS = 60
 
 # posição inicial
 x = LARGURA // 2
-y = ALTURA // 2
+y = 350
 
-player = Benício(x, y, 3)
+player = Benício(x, y, 2)
 
 # obstáculos
 mapa = Map()
@@ -56,7 +56,7 @@ while rodando:
     player.controlar(mapa.obstaculos)
     player.desenhar(tela_base)
 
-    DEBUG = False
+    DEBUG = True
 
     if DEBUG:
         mapa.desenhar_debug(tela_base)

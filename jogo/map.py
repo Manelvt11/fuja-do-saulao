@@ -1,27 +1,38 @@
 import pygame
+import pytmx
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Map:
     def __init__(self):
         self.largura = 800
         self.altura = 600
 
-        self.fundo = pygame.image.load("jogo/assets/cenario/labo.png").convert()
+        caminho_tmx = os.path.join(BASE_DIR, "assets", "cenario", "laboratorio.tmx")
+        self.tmx = pytmx.load_pygame(caminho_tmx)
+
+        caminho_fundo = os.path.join(BASE_DIR, "assets", "cenario", "labo.png")
+        self.fundo = pygame.image.load(caminho_fundo).convert()
         self.fundo = pygame.transform.scale(self.fundo, (self.largura, self.altura))
 
-        #obstaculos
+        #tamanho original da img do laboratorio
+        largura_original = 1536
+        altura_original = 1024
+
+        #proporção entre o tamanho original e o tamanho do jogo
+        escala_x = self.largura / largura_original
+        escala_y = self.altura / altura_original
+
+        #obstaculos com a biblioteca pytmx e tiled
         self.obstaculos = [
-            #mesas
-            pygame.Rect(135, 220, 210, 120), #mesa superior esquerda
-            pygame.Rect(455, 220, 230, 120), #mesa superior direita
-            pygame.Rect(110, 400, 240, 120),  #mesa inferior esquerda
-            pygame.Rect(455, 400, 233, 120),  #mesa inferior direita
-
-            #paredes
-            pygame.Rect(0, 175, 800, 20), #parede de cima
-            pygame.Rect(0, 560, 800, 40), #parede de baixo
-            pygame.Rect(10, 0, 60, 600), #parede do lado esquerdo
-            pygame.Rect(750, 0, 90, 600) #parede do lado direito
-
+            pygame.Rect(
+                int(obj.x * escala_x), 
+                int(obj.y * escala_y), 
+                int(obj.width * escala_x), 
+                int(obj.height * escala_y)
+            )
+            for obj in self.tmx.get_layer_by_name("colisoes")
         ]
 
     def desenhar(self, tela):
