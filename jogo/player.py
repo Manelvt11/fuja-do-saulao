@@ -1,5 +1,8 @@
 import pygame
 from personagens import Personagem
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 #classe filha
 #A classe Benicio herda atributos e métodos da classe Personagem
@@ -14,7 +17,12 @@ class Benício(Personagem):
 
         super().__init__(x, y, 40, 40, velocidade)
 
-        self.sheet = pygame.image.load("jogo/assets/player/spritesheet.png").convert_alpha()
+        spritesheet = os.path.join(BASE_DIR, "assets", "player", "spritesheet.png")
+        self.spritesheet = pygame.image.load(spritesheet).convert_alpha()
+
+        #vida
+        self.vida = 3
+        self.cooldown_dano = 0
 
         #tamanho de benicio
         self.frame_largura = 256
@@ -37,6 +45,9 @@ class Benício(Personagem):
 
     #movimentacao com teclado
     def controlar(self, obstaculos):
+        if self.cooldown_dano > 0:
+            self.cooldown_dano -= 1
+
         teclas = pygame.key.get_pressed()
 
         dx = 0
@@ -75,13 +86,18 @@ class Benício(Personagem):
         #else:
             #self.frame_atual = 0
 
+    def receber_dano(self):
+        if self.cooldown_dano <= 0:
+            self.vida -= 1
+            self.cooldown_dano = 120 #2 segundos
+
     def desenhar(self, tela):
         linha = self.direcoes[self.direcao]
 
         x_frame = self.frame_atual * self.frame_largura
         y_frame = linha * self.frame_altura
 
-        frame = self.sheet.subsurface(
+        frame = self.spritesheet.subsurface(
             (x_frame, y_frame, self.frame_largura, self.frame_altura)
         )
 
@@ -104,4 +120,4 @@ class Benício(Personagem):
         tela.blit(sombra, (self.rect.centerx - 25, self.rect.bottom - 5))
 
         #debug da hitbox
-        pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)
+        #pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)

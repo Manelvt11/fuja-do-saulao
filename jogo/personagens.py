@@ -35,4 +35,4 @@ class Personagem:
                     if dy < 0:
                         self.rect.top = obs.bottom
 
-        self.rect.clamp_ip(pygame.Rect(20, 20, 760, 580))
+        self.rect.clamp_ip(pygame.Rect(0, 0, 800, 600))

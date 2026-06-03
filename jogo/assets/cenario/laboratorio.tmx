@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="25" height="19" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="36">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="25" height="19" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="57">
  <layer id="1" name="Camada de Blocos 1" width="25" height="19">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -32,13 +32,19 @@
   <object id="14" x="214.667" y="693.333" width="452" height="193.333"/>
   <object id="15" x="876" y="696" width="448" height="192"/>
   <object id="18" x="1" y="-6" width="1537" height="330"/>
-  <object id="20" x="1433" y="330">
-   <polygon points="0,0 118,636 116,636 118,0"/>
-  </object>
-  <object id="21" x="6" y="332">
-   <polygon points="0,0 -122,688 -124,2"/>
-  </object>
   <object id="24" x="-20" y="982" width="712" height="76"/>
   <object id="25" x="847" y="981" width="712" height="76"/>
+  <object id="42" x="0" y="324" width="114" height="78"/>
+  <object id="49" x="1423" y="324" width="114" height="78"/>
+  <object id="43" x="0" y="400" width="104" height="68"/>
+  <object id="51" x="1433" y="400" width="104" height="68"/>
+  <object id="44" x="2" y="464" width="98" height="58"/>
+  <object id="52" x="1439" y="464" width="98" height="58"/>
+  <object id="45" x="2" y="522" width="84" height="50"/>
+  <object id="53" x="1450" y="522" width="84" height="50"/>
+  <object id="46" x="2" y="570" width="72" height="54"/>
+  <object id="54" x="1460" y="570" width="72" height="54"/>
+  <object id="47" x="0" y="622" width="64" height="358"/>
+  <object id="55" x="1468" y="622" width="64" height="358"/>
  </objectgroup>
 </map>
