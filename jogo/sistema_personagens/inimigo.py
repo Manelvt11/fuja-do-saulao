@@ -1,5 +1,5 @@
 import pygame
-from personagens import Personagem
+from sistema_personagens.personagens import Personagem
 import os
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
@@ -14,7 +14,7 @@ class Saulao(Personagem):
     def __init__(self, x, y, velocidade=2):
         super().__init__(x, y, 30, 20, velocidade)
 
-        caminho = os.path.join(BASE_DIR, "assets", "inimigo", "saulao.png")
+        caminho = os.path.join(BASE_DIR,"..", "assets", "inimigo", "saulao.png")
         imagem = pygame.image.load(caminho).convert_alpha()
         self.imagem = pygame.transform.scale(imagem, (80, 120))
 

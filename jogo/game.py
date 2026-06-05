@@ -1,7 +1,7 @@
 import pygame
 import random
-from player import Benício
-from inimigo import Saulao
+from sistema_personagens.player import Benício
+from sistema_personagens.inimigo import Saulao
 from map import Map
 from hud import HUD
 

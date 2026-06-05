@@ -1,5 +1,5 @@
 import pygame
-from personagens import Personagem
+from sistema_personagens.personagens import Personagem
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -17,7 +17,7 @@ class Benício(Personagem):
 
         super().__init__(x, y, 40, 40, velocidade)
 
-        spritesheet = os.path.join(BASE_DIR, "assets", "player", "spritesheet.png")
+        spritesheet = os.path.join(BASE_DIR, "..", "assets", "player", "spritesheet.png")
         self.spritesheet = pygame.image.load(spritesheet).convert_alpha()
 
         #vida
