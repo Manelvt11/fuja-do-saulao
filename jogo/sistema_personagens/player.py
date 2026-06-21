@@ -1,6 +1,7 @@
 import pygame
 from sistema_personagens.personagens import Personagem
 import os
+from sistema_itens_mistura.inventario import Inventario
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,6 +43,8 @@ class Benício(Personagem):
             "esquerda": 2,
             "direita": 3
         }
+
+        self.inventario = Inventario()
 
     #movimentacao com teclado
     def controlar(self, obstaculos):

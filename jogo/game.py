@@ -4,6 +4,7 @@ from sistema_personagens.player import Benício
 from sistema_personagens.inimigo import Saulao
 from map import Map
 from hud import HUD
+from sistema_itens_mistura.item import Item
 
 LARGURA = 800
 ALTURA = 600
@@ -25,6 +26,15 @@ class Game:
         self.mapa = Map()
         self.hud = HUD()
 
+        self.itens = [
+            Item("Hidrogênio", 0, 290, 300),
+            Item("Oxigênio", 1, 520, 510),
+            Item("Enxofre", 2, 700, 340),
+            Item("Cloro", 3, 180, 420),
+            Item("Carbono", 4, 500, 420),
+            Item("Sódio", 5, 650, 350),
+        ]
+
         self.luz = pygame.Surface((300, 300), pygame.SRCALPHA)
         for raio in range(150, 0, -1):
             transparencia = int(raio * 1.7)
@@ -37,9 +47,14 @@ class Game:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 self.rodando = False
+
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:
                     self.rodando = False
+
+                elif evento.key == pygame.K_e:
+                    self.coletar_item()
+
 
     def atualizar(self):
         self.player.controlar(self.mapa.obstaculos)
@@ -51,6 +66,9 @@ class Game:
     def desenhar(self):
         self.tela_base.fill((0, 0, 0))
         self.mapa.desenhar(self.tela_base)
+
+        for item in self.itens:
+            item.desenhar(self.tela_base)
 
         self.player.desenhar(self.tela_base)
         self.saulao.desenhar(self.tela_base)
@@ -73,6 +91,20 @@ class Game:
         tela_escalada = pygame.transform.scale(self.tela_base, (self.largura_tela, self.altura_tela))
         self.tela.blit(tela_escalada, (0, 0))
         pygame.display.flip()
+
+    def coletar_item(self):
+        for item in self.itens:
+            if item.coletado:
+                continue
+
+            if self.player.rect.colliderect(item.rect):
+                sucesso = self.player.inventario.adicionar_item(item)
+
+                if sucesso:
+                    item.coletado = True
+                    print(f"{item.nome} coletado!")
+
+                return
 
     def rodar(self):
         while self.rodando:
