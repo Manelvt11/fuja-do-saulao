@@ -5,6 +5,7 @@ from sistema_personagens.inimigo import Saulao
 from map import Map
 from hud import HUD
 from sistema_itens_mistura.item import Item
+from sistema_menu.tela_inicial import TelaInicial
 
 LARGURA = 800
 ALTURA = 600
@@ -107,6 +108,18 @@ class Game:
                 return
 
     def rodar(self):
+        tela_inicial = TelaInicial(
+            self.tela,
+            self.clock,
+            self.largura_tela,
+            self.altura_tela
+        )
+
+        resultado = tela_inicial.executar()
+
+        if resultado != "jogar":
+            return
+
         while self.rodando:
             self.tratar_eventos()
             self.atualizar()
