@@ -11,7 +11,7 @@ class Personagem:
         #velocidade
         self.velocidade = velocidade
 
-    def mover(self,dx,dy,obstaculos):
+    def mover(self, dx, dy, obstaculos, largura_mapa=800, altura_mapa=600):
         dx = int(dx)
         dy = int(dy)
 
@@ -35,4 +35,5 @@ class Personagem:
                     if dy < 0:
                         self.rect.top = obs.bottom
 
-        self.rect.clamp_ip(pygame.Rect(0, 0, 800, 600))
+        #agora o limite acompanha o tamanho real do mapa, não mais a tela
+        self.rect.clamp_ip(pygame.Rect(0, 0, largura_mapa, altura_mapa))

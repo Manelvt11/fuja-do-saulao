@@ -6,36 +6,30 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Map:
     def __init__(self):
-        self.largura = 800
-        self.altura = 600
-
-        caminho_tmx = os.path.join(BASE_DIR, "assets", "cenario", "laboratorio.tmx")
+        caminho_tmx = os.path.join(BASE_DIR, "assets", "cenario", "laboratorio", "laboratorio-tiled.tmx")
         self.tmx = pytmx.load_pygame(caminho_tmx)
 
-        caminho_fundo = os.path.join(BASE_DIR, "assets", "cenario", "labo.png")
+        #tamanho do mundo agora vem direto do próprio mapa (tiles x tamanho do tile)
+        self.largura = self.tmx.width * self.tmx.tilewidth
+        self.altura = self.tmx.height * self.tmx.tileheight
+
+        caminho_fundo = os.path.join(BASE_DIR, "assets", "cenario", "laboratorio", "mapa.png")
         self.fundo = pygame.image.load(caminho_fundo).convert()
         self.fundo = pygame.transform.scale(self.fundo, (self.largura, self.altura))
 
-        #tamanho original da img do laboratorio
-        largura_original = 1536
-        altura_original = 1024
-
-        #proporção entre o tamanho original e o tamanho do jogo
-        escala_x = self.largura / largura_original
-        escala_y = self.altura / altura_original
-
         #obstaculos com a biblioteca pytmx e tiled
+        #como o mapa novo já nasce no tamanho final, não vou mais escalar
         self.obstaculos = [
             pygame.Rect(
-                int(obj.x * escala_x), 
-                int(obj.y * escala_y), 
-                int(obj.width * escala_x), 
-                int(obj.height * escala_y)
+                int(obj.x), 
+                int(obj.y), 
+                int(obj.width), 
+                int(obj.height)
             )
             for obj in self.tmx.get_layer_by_name("colisoes")
         ]
 
-        self.tile_size = 32
+        self.tile_size = self.tmx.tilewidth
         colunas = self.largura // self.tile_size
         linhas = self.altura // self.tile_size
 
@@ -59,5 +53,3 @@ class Map:
     def desenhar_debug(self, tela):
         for obs in self.obstaculos:
             pygame.draw.rect(tela, (255, 0, 0), obs, 2)
-
-    
