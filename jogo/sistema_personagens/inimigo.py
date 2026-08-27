@@ -11,25 +11,23 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 #Saulão será o inimigo do jogo
 
 #tamanho do sprite desenhado na tela
-SPRITE_LARGURA = 48
-SPRITE_ALTURA = 72
+ESCALA_SPRITE = 0.7
+SPRITE_LARGURA = int(48 * ESCALA_SPRITE)
+SPRITE_ALTURA = int(72 * ESCALA_SPRITE)
 
 class Saulao(Personagem):
-    def __init__(self, x, y, velocidade=2):
-        super().__init__(x, y, 18, 12, velocidade)
+    def __init__(self, x, y, velocidade=0.5):
+        super().__init__(x, y, 13, 9, velocidade)
 
         caminho = os.path.join(BASE_DIR,"..", "assets", "inimigo", "saulao.png")
         imagem = pygame.image.load(caminho).convert_alpha()
         self.imagem = pygame.transform.scale(imagem, (SPRITE_LARGURA, SPRITE_ALTURA))
 
-        #brilho roxo/verde ao redor do Saulão um gradiente radial com
-        #as duas cores misturadas, desenhado com blend aditivo
-        #fica brilhando mesmo em cima da escuridão
-        self.glow_raio = 70
+        self.glow_raio = 30
         self.glow = pygame.Surface((self.glow_raio * 2, self.glow_raio * 2), pygame.SRCALPHA)
 
-        cor_nucleo = (170, 40, 220)   # roxo
-        cor_borda = (40, 220, 130)    # verde
+        cor_nucleo = (90, 15, 130)   # roxo escuro
+        cor_borda = (25, 5, 40)      # quase preto com leve tom roxo nas bordas
 
         for raio in range(self.glow_raio, 0, -1):
             t = raio / self.glow_raio
@@ -37,7 +35,7 @@ class Saulao(Personagem):
             r = int(cor_borda[0] + (cor_nucleo[0] - cor_borda[0]) * (1 - t))
             g = int(cor_borda[1] + (cor_nucleo[1] - cor_borda[1]) * (1 - t))
             b = int(cor_borda[2] + (cor_nucleo[2] - cor_borda[2]) * (1 - t))
-            alpha = int(130 * (1 - t))
+            alpha = int(70 * (1 - t))
 
             pygame.draw.circle(
                 self.glow, (r, g, b, alpha),
@@ -130,7 +128,6 @@ class Saulao(Personagem):
         return self.rect.colliderect(jogador.rect)
     
     def desenhar(self, tela):
-        #brilho primeiro (fica atrás do sprite), com blend aditivo pra parecer luminoso mesmo em áreas escuras
         glow_rect = self.glow.get_rect(center=(self.rect.centerx, self.rect.centery))
         tela.blit(self.glow, glow_rect, special_flags=pygame.BLEND_RGBA_ADD)
 
@@ -140,9 +137,9 @@ class Saulao(Personagem):
         tela.blit(self.imagem, imagem_rect)
 
         #sombra
-        sombra = pygame.Surface((50, 20), pygame.SRCALPHA)
+        sombra = pygame.Surface((36, 14), pygame.SRCALPHA)
         pygame.draw.ellipse(sombra, (0, 0, 0, 100), sombra.get_rect())
-        tela.blit(sombra, (self.rect.centerx - 25, self.rect.bottom - 5))
+        tela.blit(sombra, (self.rect.centerx - 18, self.rect.bottom - 4))
 
         #debug
-        #pygame.draw.rect(tela, (255, 0, 0), self.rect, 2)
+        pygame.draw.rect(tela, (255, 0, 0), self.rect, 2)

@@ -14,22 +14,22 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 #controle pelo teclado
 
 #tamanho do sprite desenhado na tela
-SPRITE_LARGURA = 48
-SPRITE_ALTURA = 72
+ESCALA_SPRITE = 0.7
+SPRITE_LARGURA = int(48 * ESCALA_SPRITE)
+SPRITE_ALTURA = int(72 * ESCALA_SPRITE)
 
 class Benício(Personagem):
     def __init__(self, x, y, velocidade):
+        super().__init__(x, y, 16, 18, velocidade)
 
-        super().__init__(x, y, 24, 24, velocidade)
-
-        spritesheet = os.path.join(BASE_DIR, "..", "assets", "player", "spritesheet.png")
+        spritesheet = os.path.join(BASE_DIR, "..", "assets", "player", "sprites.png")
         self.spritesheet = pygame.image.load(spritesheet).convert_alpha()
 
         #vida
         self.vida = 3
         self.cooldown_dano = 0
 
-        #tamanho de benicio
+        #tamanho de cada frame no arquivo de origem (não muda com a escala de tela)
         self.frame_largura = 256
         self.frame_altura = 384
 
@@ -37,7 +37,7 @@ class Benício(Personagem):
 
         self.frame_atual = 0
         self.tempo_animacao = 0
-        self.velocidade_animacao = 10
+        self.velocidade_animacao = 8
 
         self.direcao = "baixo"
 
@@ -82,16 +82,18 @@ class Benício(Personagem):
 
         super().mover(dx, dy, obstaculos, largura_mapa, altura_mapa)
 
-        #animação
-        #if dx != 0 or dy != 0:
-        #    self.tempo_animacao += 1
-#
-        #    if self.tempo_animacao >= self.velocidade_animacao:
-        #        self.frame_atual = (self.frame_atual + 1) % self.frames_por_linha
-        #        self.tempo_animacao = 0
-#
-        #else:
-        #   self.frame_atual = 0
+        #animação: avança o ciclo de passos só enquanto ele está realmente andando,
+        #e volta pro frame parado (0) assim que solta a tecla
+        if dx != 0 or dy != 0:
+            self.tempo_animacao += 1
+
+            if self.tempo_animacao >= self.velocidade_animacao:
+                self.frame_atual = (self.frame_atual + 1) % self.frames_por_linha
+                self.tempo_animacao = 0
+
+        else:
+            self.frame_atual = 0
+            self.tempo_animacao = 0
 
     def receber_dano(self):
         if self.cooldown_dano <= 0:
@@ -113,7 +115,7 @@ class Benício(Personagem):
 
         imagem.set_alpha(230)
 
-        offset_x = -7
+        offset_x = -5
         imagem_rect = imagem.get_rect(
             midbottom=(self.rect.centerx + offset_x, self.rect.bottom)
         )
@@ -121,10 +123,10 @@ class Benício(Personagem):
         tela.blit(imagem, imagem_rect)
 
         #sombra
-        sombra = pygame.Surface((50, 20), pygame.SRCALPHA)
+        sombra = pygame.Surface((36, 14), pygame.SRCALPHA)
         pygame.draw.ellipse(sombra, (0, 0, 0, 100), sombra.get_rect())
 
-        tela.blit(sombra, (self.rect.centerx - 25, self.rect.bottom - 5))
+        tela.blit(sombra, (self.rect.centerx - 18, self.rect.bottom - 4))
 
         #debug da hitbox
-        #pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)
+        pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)

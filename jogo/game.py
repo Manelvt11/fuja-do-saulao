@@ -29,7 +29,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.FPS = 60
 
-        self.player = Benício(self.mapa.largura // 2, self.mapa.altura // 2, 1.5)
+        self.player = Benício(self.mapa.largura // 2, self.mapa.altura // 2, 1.8)
         self.saulao = Saulao(200, 200, velocidade=1)
         self.hud = HUD()
 
