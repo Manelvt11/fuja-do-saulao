@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="215">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="222">
  <layer id="1" name="mapa" width="32" height="32">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -97,7 +97,6 @@
   <object id="64" x="592" y="68" width="130" height="28"/>
   <object id="65" x="800" y="68" width="194" height="26"/>
   <object id="66" x="926" y="92" width="66" height="40"/>
-  <object id="67" x="946" y="130" width="46" height="30"/>
   <object id="68" x="968" y="156" width="26" height="146"/>
   <object id="69" x="28" y="290" width="86" height="118"/>
   <object id="70" x="30" y="408" width="28" height="134"/>
@@ -173,7 +172,6 @@
   <object id="150" x="556" y="123.5" width="22" height="8"/>
   <object id="151" x="592" y="96.6667" width="84.6667" height="18"/>
   <object id="152" x="591.333" y="114" width="23.3333" height="20"/>
-  <object id="154" x="589.333" y="178" width="32.6667" height="89.3333"/>
   <object id="155" x="729.333" y="162" width="26.6667" height="46.6667"/>
   <object id="156" x="721.333" y="69.3333" width="79.3333" height="10"/>
   <object id="158" x="873.333" y="420" width="45.3333" height="64"/>
@@ -184,7 +182,6 @@
   <object id="163" x="876.667" y="495.333" width="52" height="4"/>
   <object id="164" x="723.333" y="316.667" width="271.333" height="45.3333"/>
   <object id="165" x="758" y="402" width="52.6667" height="40"/>
-  <object id="166" x="723.333" y="380.667" width="76" height="20"/>
   <object id="167" x="722.667" y="363.333" width="68.6667" height="15.3333"/>
   <object id="168" x="706" y="415.333" width="17.3333" height="24.6667"/>
   <object id="169" x="659.333" y="399.333" width="44.6667" height="30.6667"/>
@@ -212,10 +209,6 @@
   <object id="194" x="473.333" y="524.667" width="27.3333" height="20"/>
   <object id="195" x="508.667" y="525.333" width="68" height="18.6667"/>
   <object id="196" x="583.333" y="482" width="30" height="63.3333"/>
-  <object id="197" x="588" y="466" width="12" height="15.3333"/>
-  <object id="198" x="550" y="422.667" width="32.6667" height="36"/>
-  <object id="199" x="546" y="435.333" width="4" height="21.3333"/>
-  <object id="200" x="583.333" y="434.667" width="4.66667" height="18.6667"/>
   <object id="201" x="510" y="495.333" width="66" height="29.3333"/>
   <object id="202" x="418" y="445.333" width="46" height="15.3333"/>
   <object id="203" x="416.667" y="417.333" width="49.3333" height="26"/>
@@ -230,5 +223,10 @@
   <object id="212" x="252" y="466.667" width="16" height="20"/>
   <object id="213" x="232" y="708" width="68.6667" height="44.6667"/>
   <object id="214" x="168.667" y="720.667" width="28.6667" height="30.6667"/>
+  <object id="216" x="546.667" y="436" width="34.6667" height="21"/>
+  <object id="217" x="596" y="205" width="18" height="61"/>
+  <object id="218" x="968" y="130" width="26" height="25"/>
+  <object id="219" x="360" y="155.667" width="1.66667" height="46.3333"/>
+  <object id="221" x="722.333" y="378.667" width="28.3333" height="22.6667"/>
  </objectgroup>
 </map>

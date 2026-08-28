@@ -14,26 +14,26 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 #controle pelo teclado
 
 #tamanho do sprite desenhado na tela
-ESCALA_SPRITE = 0.7
-SPRITE_LARGURA = int(48 * ESCALA_SPRITE)
-SPRITE_ALTURA = int(72 * ESCALA_SPRITE)
+ESCALA_SPRITE = 0.19
+SPRITE_LARGURA = int(155 * ESCALA_SPRITE)
+SPRITE_ALTURA = int(246 * ESCALA_SPRITE)
 
 class Benício(Personagem):
-    def __init__(self, x, y, velocidade):
+    def __init__(self, x, y, velocidade=float):
         super().__init__(x, y, 16, 18, velocidade)
 
-        spritesheet = os.path.join(BASE_DIR, "..", "assets", "player", "sprites.png")
+        spritesheet = os.path.join(BASE_DIR, "..", "assets", "player", "spritesheet.png")
         self.spritesheet = pygame.image.load(spritesheet).convert_alpha()
 
         #vida
         self.vida = 3
         self.cooldown_dano = 0
 
-        #tamanho de cada frame no arquivo de origem (não muda com a escala de tela)
-        self.frame_largura = 256
-        self.frame_altura = 384
+        #tamanho de cada frame no arquivo de origem
+        self.frame_largura = 155
+        self.frame_altura = 246
 
-        self.frames_por_linha = 4
+        self.frames_por_linha = 6
 
         self.frame_atual = 0
         self.tempo_animacao = 0
@@ -77,8 +77,8 @@ class Benício(Personagem):
             self.direcao = "baixo"
 
         if dx != 0 and dy != 0:
-            dx = int(dx * 0.7071)
-            dy = int(dy * 0.7071)
+            dx = int(dx * 0.92)
+            dy = int(dy * 0.92)
 
         super().mover(dx, dy, obstaculos, largura_mapa, altura_mapa)
 
@@ -129,4 +129,4 @@ class Benício(Personagem):
         tela.blit(sombra, (self.rect.centerx - 18, self.rect.bottom - 4))
 
         #debug da hitbox
-        pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)
+        #pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)

@@ -29,8 +29,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.FPS = 60
 
-        self.player = Benício(self.mapa.largura // 2, self.mapa.altura // 2, 1.8)
-        self.saulao = Saulao(200, 200, velocidade=1)
+        x,y = self.encontrar_posicao_livre(16, 18)
+        self.player = Benício(x,y, 1.3)
+        self.saulao = Saulao(200, 200, velocidade=1.0)
         self.hud = HUD()
 
         ZOOM = 2
@@ -63,6 +64,16 @@ class Game:
 
         self.rodando = True
         self.DEBUG = False
+
+    def encontrar_posicao_livre(self, largura,altura):
+        while True:
+            x = random.randint(0, self.mapa.largura - largura)
+            y = random.randint(0, self.mapa.altura - altura)
+
+            rect = pygame.Rect(x, y, largura, altura)
+
+            if not any(rect.colliderect(obs) for obs in self.mapa.obstaculos):
+                return x, y
 
     def tratar_eventos(self):
         for evento in pygame.event.get():

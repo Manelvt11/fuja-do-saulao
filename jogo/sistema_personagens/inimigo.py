@@ -16,7 +16,7 @@ SPRITE_LARGURA = int(48 * ESCALA_SPRITE)
 SPRITE_ALTURA = int(72 * ESCALA_SPRITE)
 
 class Saulao(Personagem):
-    def __init__(self, x, y, velocidade=0.5):
+    def __init__(self, x, y, velocidade=float):
         super().__init__(x, y, 13, 9, velocidade)
 
         caminho = os.path.join(BASE_DIR,"..", "assets", "inimigo", "saulao.png")
@@ -27,7 +27,7 @@ class Saulao(Personagem):
         self.glow = pygame.Surface((self.glow_raio * 2, self.glow_raio * 2), pygame.SRCALPHA)
 
         cor_nucleo = (90, 15, 130)   # roxo escuro
-        cor_borda = (25, 5, 40)      # quase preto com leve tom roxo nas bordas
+        cor_borda = (25, 5, 40)      # quase preto com tom roxo nas bordas
 
         for raio in range(self.glow_raio, 0, -1):
             t = raio / self.glow_raio
@@ -142,4 +142,4 @@ class Saulao(Personagem):
         tela.blit(sombra, (self.rect.centerx - 18, self.rect.bottom - 4))
 
         #debug
-        pygame.draw.rect(tela, (255, 0, 0), self.rect, 2)
+        #pygame.draw.rect(tela, (255, 0, 0), self.rect, 2)

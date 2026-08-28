@@ -5,6 +5,10 @@ import pygame
 #posição, velocidade e colisão
 class Personagem:
     def __init__(self, x, y, largura, altura, velocidade):
+        #posição real do personagem
+        self.pos_x = float(x)
+        self.pos_y = float(y)
+
         #rect responsavel pela colisão e posição
         self.rect = pygame.Rect(x, y, largura, altura)
 
@@ -12,28 +16,34 @@ class Personagem:
         self.velocidade = velocidade
 
     def mover(self, dx, dy, obstaculos, largura_mapa=800, altura_mapa=600):
-        dx = int(dx)
-        dy = int(dy)
+        #posição anterior para verificar colisões
+        antigo_x = self.pos_x
+        antigo_y = self.pos_y
 
-        if dx != 0:
-            self.rect.x += dx
-            for obs in obstaculos:
-                if self.rect.colliderect(obs):
-                    if dx > 0:
-                        self.rect.right = obs.left
+        self.pos_x += dx
+        self.pos_y += dy
 
-                    if dx < 0:
-                        self.rect.left = obs.right
+        self.rect.x = int(self.pos_x)
+        self.rect.y = int(self.pos_y)
 
-        if dy != 0:
-            self.rect.y += dy
-            for obs in obstaculos:
-                if self.rect.colliderect(obs):
-                    if dy > 0:
-                        self.rect.bottom = obs.top
+        for obs in obstaculos:
+            if self.rect.colliderect(obs):
+                self.pos_x = antigo_x
+                self.rect.x = int(self.pos_x)
 
-                    if dy < 0:
-                        self.rect.top = obs.bottom
+                break
 
-        #agora o limite acompanha o tamanho real do mapa, não mais a tela
-        self.rect.clamp_ip(pygame.Rect(0, 0, largura_mapa, altura_mapa))
+        for obs in obstaculos:
+            if self.rect.colliderect(obs):
+                self.pos_y = antigo_y
+                self.rect.y = int(self.pos_y)
+
+                break
+
+        #limite do mapa
+        self.pos_x = max(0, min(self.pos_x, largura_mapa - self.rect.width))
+        self.pos_y = max(0, min(self.pos_y, altura_mapa - self.rect.height))
+        
+        # atualiza o Rect
+        self.rect.x = int(self.pos_x)
+        self.rect.y = int(self.pos_y)
