@@ -7,7 +7,7 @@ from sistema_menu.tela_creditos import TelaCreditos
 #Classe filha
 #TelaInicial herda de Tela. É o menu principal: Jogar, Créditos, Sair
 class TelaInicial(Tela):
-    CAMINHO_CAPA = os.path.join("assets", "menu", "capa.png")
+    CAMINHO_CAPA = os.path.join("assets", "telas", "capa.png")
 
     def __init__(self, tela_pygame, relogio, largura, altura):
         super().__init__(tela_pygame, relogio, largura, altura, caminho_fundo=self.CAMINHO_CAPA)
