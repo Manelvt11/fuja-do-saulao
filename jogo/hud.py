@@ -3,11 +3,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
 class HUD:
-
     def __init__(self):
-
         sprite = pygame.image.load(
             os.path.join(BASE_DIR, "assets", "hud", "spritecoracao.png")
         ).convert_alpha()
@@ -29,7 +26,6 @@ class HUD:
         self.vida_anterior = 3
 
     def desenhar(self, tela, jogador):
-
         if jogador.vida < self.vida_anterior:
             self.animando = True
             self.frame_atual = 0

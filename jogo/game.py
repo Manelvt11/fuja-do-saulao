@@ -7,10 +7,14 @@ from hud import HUD
 from camera import Camera
 from sistema_itens_mistura.item import Item
 from sistema_menu.tela_inicial import TelaInicial
+from estado import Estado
+import os
 
 #tamanho da janela que o jogador vê (viewport), não é mais o tamanho do mapa
 LARGURA_VIEWPORT = 800
 ALTURA_VIEWPORT = 600
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Game:
     def __init__(self):
@@ -65,6 +69,14 @@ class Game:
         self.rodando = True
         self.DEBUG = False
 
+        self.estado = Estado.JOGANDO
+        self.tempo_morte = 0
+        self.fade = 0
+
+        self.tela_morte = pygame.image.load(
+            os.path.join(BASE_DIR, "assets", "telas", "tela_morte.jpeg")
+        ).convert()
+
     def encontrar_posicao_livre(self, largura,altura):
         while True:
             x = random.randint(0, self.mapa.largura - largura)
@@ -89,11 +101,25 @@ class Game:
 
 
     def atualizar(self):
-        self.player.controlar(self.mapa.obstaculos, self.mapa.largura, self.mapa.altura)
-        self.saulao.perseguir(self.player, self.mapa)
+        if self.estado == Estado.MORTE:
+            self.fade += 3
+            if self.fade > 255:
+                self.fade = 255
+            return
 
+        self.player.controlar(
+            self.mapa.obstaculos,
+            self.mapa.largura,
+            self.mapa.altura
+        )
+
+        self.saulao.perseguir(self.player, self.mapa)
+    
         if self.saulao.verificar_colisao_jogador(self.player):
             self.player.receber_dano()
+    
+            if self.player.vida <= 0:
+                self.estado = Estado.MORTE
 
     def desenhar(self):
         self.mundo.fill((0, 0, 0))
@@ -132,10 +158,29 @@ class Game:
             (px_tela - 150, py_tela - 150),
             special_flags=pygame.BLEND_RGBA_SUB
         )
+
         self.tela_base.blit(dark, (0, 0))
 
-        tela_escalada = pygame.transform.scale(self.tela_base, (self.largura_tela, self.altura_tela))
+        if self.estado == Estado.MORTE:
+            if self.fade < 255:
+                fade = pygame.Surface((LARGURA_VIEWPORT, ALTURA_VIEWPORT))
+                fade.fill((0, 0, 0))
+                fade.set_alpha(self.fade)
+                self.tela_base.blit(fade, (0, 0))
+            else:
+                imagem = pygame.transform.scale(
+                    self.tela_morte,
+                    (LARGURA_VIEWPORT, ALTURA_VIEWPORT)
+                )
+                self.tela_base.blit(imagem, (0, 0))
+
+        tela_escalada = pygame.transform.scale(
+            self.tela_base,
+            (self.largura_tela, self.altura_tela)
+        )
+
         self.tela.blit(tela_escalada, (0, 0))
+
         pygame.display.flip()
 
     def coletar_item(self):
