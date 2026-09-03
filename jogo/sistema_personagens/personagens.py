@@ -15,6 +15,21 @@ class Personagem:
         #velocidade
         self.velocidade = velocidade
 
+        self.frame_largura = 155
+        self.frame_altura = 246
+        self.frames_por_linha = 6
+        self.frame_atual = 0
+        self.tempo_animacao = 0
+        self.velocidade_animacao = 12
+        self.direcao = "baixo"
+
+        self.direcoes = {
+            "baixo": 0,
+            "cima": 1,
+            "esquerda": 2,
+            "direita": 3
+        }
+
     def mover(self, dx, dy, obstaculos, largura_mapa=800, altura_mapa=600):
         #posição anterior para verificar colisões
         antigo_x = self.pos_x
@@ -47,3 +62,21 @@ class Personagem:
         # atualiza o Rect
         self.rect.x = int(self.pos_x)
         self.rect.y = int(self.pos_y)
+
+    def animar(self, andando):
+        if andando:
+            self.tempo_animacao += 1
+
+            if self.tempo_animacao >= self.velocidade_animacao:
+                self.frame_atual = (self.frame_atual + 1) % self.frames_por_linha
+                self.tempo_animacao = 0
+        else:
+            self.frame_atual = 0
+            self.tempo_animacao = 0
+
+    def atualizar_direcao(self, dx, dy):
+        if abs(dx) > abs(dy):
+            self.direcao = "direita" if dx > 0 else "esquerda"
+
+        elif dy != 0:
+            self.direcao = "baixo" if dy > 0 else "cima"

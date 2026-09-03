@@ -113,7 +113,7 @@ class Game:
             self.mapa.altura
         )
 
-        self.saulao.perseguir(self.player, self.mapa)
+        self.saulao.atualizar_ia(self.player, self.mapa)
     
         if self.saulao.verificar_colisao_jogador(self.player):
             self.player.receber_dano()

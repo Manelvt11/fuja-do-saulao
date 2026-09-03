@@ -29,25 +29,6 @@ class Benício(Personagem):
         self.vida = 3
         self.cooldown_dano = 0
 
-        #tamanho de cada frame no arquivo de origem
-        self.frame_largura = 155
-        self.frame_altura = 246
-
-        self.frames_por_linha = 6
-
-        self.frame_atual = 0
-        self.tempo_animacao = 0
-        self.velocidade_animacao = 8
-
-        self.direcao = "baixo"
-
-        self.direcoes = {
-            "baixo": 0,
-            "cima": 1,
-            "esquerda": 2,
-            "direita": 3
-        }
-
         self.inventario = Inventario()
 
     #movimentacao com teclado
@@ -82,18 +63,7 @@ class Benício(Personagem):
 
         super().mover(dx, dy, obstaculos, largura_mapa, altura_mapa)
 
-        #animação: avança o ciclo de passos só enquanto ele está realmente andando,
-        #e volta pro frame parado (0) assim que solta a tecla
-        if dx != 0 or dy != 0:
-            self.tempo_animacao += 1
-
-            if self.tempo_animacao >= self.velocidade_animacao:
-                self.frame_atual = (self.frame_atual + 1) % self.frames_por_linha
-                self.tempo_animacao = 0
-
-        else:
-            self.frame_atual = 0
-            self.tempo_animacao = 0
+        self.animar(dx != 0 or dy != 0)
 
     def receber_dano(self):
         if self.cooldown_dano <= 0:
