@@ -18,8 +18,14 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Game:
     def __init__(self):
+        pygame.mixer.init()
+
         self.tela = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.largura_tela, self.altura_tela = self.tela.get_size()
+
+        self.som_gameplay = os.path.join(BASE_DIR, "assets", "sounds", "som_jogo.wav")
+        pygame.mixer.music.load(self.som_gameplay)
+        pygame.mixer.music.set_volume(0.6)
 
         pygame.display.set_caption("Fuja do Saulão")
 
@@ -102,6 +108,9 @@ class Game:
 
     def atualizar(self):
         if self.estado == Estado.MORTE:
+            if self.fade == 0:
+                pygame.mixer.music.fadeout(1500)
+
             self.fade += 3
             if self.fade > 255:
                 self.fade = 255
@@ -209,6 +218,10 @@ class Game:
 
         if resultado != "jogar":
             return
+
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load(self.som_gameplay)
+        pygame.mixer.music.play(loops=-1)#-1 = repete pra sempre
 
         while self.rodando:
             self.tratar_eventos()

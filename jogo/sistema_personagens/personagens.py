@@ -20,7 +20,7 @@ class Personagem:
         self.frames_por_linha = 6
         self.frame_atual = 0
         self.tempo_animacao = 0
-        self.velocidade_animacao = 12
+        self.velocidade_animacao = 6
         self.direcao = "baixo"
 
         self.direcoes = {
