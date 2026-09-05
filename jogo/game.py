@@ -44,7 +44,7 @@ class Game:
         self.saulao = Saulao(200, 200, velocidade=1.0)
         self.hud = HUD()
 
-        ZOOM = 2
+        ZOOM = 2.6
 
         self.camera = Camera(
             LARGURA_VIEWPORT, ALTURA_VIEWPORT,
@@ -67,11 +67,19 @@ class Game:
             Item("Sódio", 5, 650, 350),
         ]
 
-        self.luz = pygame.Surface((300, 300), pygame.SRCALPHA)
-        for raio in range(150, 0, -1):
-            transparencia = int(raio * 1.7)
-            pygame.draw.circle(self.luz, (0, 0, 0, 255 - transparencia), (150, 150), raio)
-
+        self.raio_luz = 110
+        raio_nucleo = int(self.raio_luz * 0.55)  # 55% do raio fica sempre bem iluminado
+        INTENSIDADE_MAXIMA = 235  # suba/desça pra ajustar o brilho do centro
+        
+        self.luz = pygame.Surface((self.raio_luz * 2, self.raio_luz * 2), pygame.SRCALPHA)
+        for raio in range(self.raio_luz, 0, -1):
+            if raio <= raio_nucleo:
+                alpha = INTENSIDADE_MAXIMA
+            else:
+                frac = (raio - raio_nucleo) / (self.raio_luz - raio_nucleo)
+                alpha = int(INTENSIDADE_MAXIMA * (1 - frac))
+            pygame.draw.circle(self.luz, (0, 0, 0, alpha), (self.raio_luz, self.raio_luz), raio)
+        
         self.rodando = True
         self.DEBUG = False
 
@@ -161,10 +169,10 @@ class Game:
 
         dark = pygame.Surface((LARGURA_VIEWPORT, ALTURA_VIEWPORT), pygame.SRCALPHA)
         flicker = random.randint(-10, 10)
-        dark.fill((0, 0, 0, 140 + flicker))
+        dark.fill((0, 0, 0, 160 + flicker))
         dark.blit(
             self.luz,
-            (px_tela - 150, py_tela - 150),
+            (px_tela - self.raio_luz, py_tela - self.raio_luz),
             special_flags=pygame.BLEND_RGBA_SUB
         )
 

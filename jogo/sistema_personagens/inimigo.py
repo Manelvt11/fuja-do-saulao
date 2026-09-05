@@ -26,21 +26,24 @@ class Saulao(Personagem):
         caminho = os.path.join( BASE_DIR, "..", "assets", "inimigo", "spritesaulao.png")
         self.spritesheet = pygame.image.load(caminho).convert_alpha()
 
-        self.glow_raio = 30
+        self.glow_raio = 26  # também reduzi um pouco o tamanho, ajuste ao gosto
         self.glow = pygame.Surface((self.glow_raio * 2, self.glow_raio * 2), pygame.SRCALPHA)
-
+        
         cor_nucleo = (90, 15, 130)
-        cor_borda = (25, 5, 40)
-
+        raio_nucleo = int(self.glow_raio * 0.35)  # parte central com brilho mais forte
+        
         for raio in range(self.glow_raio, 0, -1):
-            t = raio / self.glow_raio
-            r = int(cor_borda[0] + (cor_nucleo[0] - cor_borda[0]) * (1 - t))
-            g = int(cor_borda[1] + (cor_nucleo[1] - cor_borda[1]) * (1 - t))
-            b = int(cor_borda[2] +(cor_nucleo[2] - cor_borda[2]) * (1 - t))
-
-            alpha = int(70 * (1 - t))
-
-            pygame.draw.circle(self.glow,(r, g, b, alpha),(self.glow_raio, self.glow_raio),raio)
+            if raio <= raio_nucleo:
+                intensidade = 1.0
+            else:
+                frac = (raio - raio_nucleo) / (self.glow_raio - raio_nucleo)
+                intensidade = 1 - frac
+        
+            r = int(cor_nucleo[0] * intensidade)
+            g = int(cor_nucleo[1] * intensidade)
+            b = int(cor_nucleo[2] * intensidade)
+        
+            pygame.draw.circle(self.glow, (r, g, b, 255), (self.glow_raio, self.glow_raio), raio)
 
         self.ia = SaulaoIA(self)
 
