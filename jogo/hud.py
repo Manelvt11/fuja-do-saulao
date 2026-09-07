@@ -1,5 +1,6 @@
 import pygame
 import os
+from sistema_itens_mistura.icones import obter_icone
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -57,3 +58,16 @@ class HUD:
                 imagem = self.coracao_vazio
 
             tela.blit(imagem, (10 + i * 50, 10))
+
+        tamanho_icone = 44
+        espacamento = 6
+        y_base = tela.get_height() - tamanho_icone - 10
+
+        for i, item in enumerate(jogador.inventario.itens):
+            icone = obter_icone(item.nome, tamanho=tamanho_icone)
+            x = 10 + i * (tamanho_icone + espacamento)
+
+            slot = pygame.Surface((tamanho_icone, tamanho_icone), pygame.SRCALPHA)
+            slot.fill((0, 0, 0, 90))
+            tela.blit(slot, (x, y_base))
+            tela.blit(icone, (x, y_base))
