@@ -30,20 +30,20 @@ class HUD:
             os.path.join(BASE_DIR, "assets", "hud", "inventarioHud.png")
         ).convert_alpha()
 
-        self.inventario_largura = 270
-        self.inventario_altura = 155
+        self.inventario_largura = 220
+        self.inventario_altura = 124    
 
         self.inventario_hud = pygame.transform.smoothscale(
             self.inventario_hud, (self.inventario_largura, self.inventario_altura)
         )
 
         self.posicoes_slots = [
-            (66, 77),
-            (135, 77),
-            (204, 77)
+            (54, 61),
+            (110, 61),
+            (166, 61)
         ]
 
-        self.tamanho_icone = 65
+        self.tamanho_icone = 48
 
     def desenhar(self, tela, jogador):
         if jogador.vida < self.vida_anterior:

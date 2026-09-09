@@ -11,7 +11,7 @@ class Porta(ObjetoMapa):
 
         if tem_item_final:
             self.trancada = False
-            game.iniciar_cutscene_vitoria()
+            game.iniciar_cena_vitoria()
         else:
             print("A porta está trancada. Falta algo...")
 
