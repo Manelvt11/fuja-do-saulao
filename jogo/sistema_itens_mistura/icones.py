@@ -25,6 +25,7 @@ def _criar_icone_padrao(tamanho):
     #cria icone simples para itens que ainda não possuem imagem cadastrada
     superficie = pygame.Surface((tamanho, tamanho), pygame.SRCALPHA)
     pygame.draw.rect(superficie, (150,150,150), (0,0, tamanho, tamanho), border_radius=6)
+    return superficie
 
 def obter_icone(nome, tamanho=40):
     #retorna icone correspondente ao item
