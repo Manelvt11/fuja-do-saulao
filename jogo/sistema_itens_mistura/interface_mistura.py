@@ -1,6 +1,9 @@
 import pygame
 import pygame_gui
 from sistema_itens_mistura.icones import obter_icone
+from sistema_itens_mistura.estilo_botoes import (
+    imagem_normal, imagem_hover, imagem_selecionado
+)
 
 class InterfaceMistura:
     LARGURA_BASE = 1365
@@ -14,6 +17,7 @@ class InterfaceMistura:
 
         self.botoes_itens = {}
         self.icones_itens = []
+        self.fundos_botoes = {}
 
         self.labels_selecionados = []
         self.icones_selecionados = []
@@ -22,6 +26,35 @@ class InterfaceMistura:
         self.botao_fechar = None
 
         self.label_feedback = None
+
+    def _criar_botao(self, rect, texto):
+        fundo = pygame_gui.elements.UIImage(
+            relative_rect=rect,
+            image_surface=imagem_normal(rect.size),
+            manager=self.game.gerente_ui,
+        )
+
+        botao = pygame_gui.elements.UIButton(
+            relative_rect=rect,
+            text=texto,
+            manager=self.game.gerente_ui,
+        )
+        self.fundos_botoes[botao] = fundo
+        return botao
+
+    def atualizar_visual_botao(self, botao, hover=False, selecionado=False):
+        fundo = self.fundos_botoes.get(botao)
+        if fundo is None:
+            return
+
+        if selecionado:
+            fundo.set_image(imagem_selecionado(fundo.rect.size))
+
+        elif hover:
+            fundo.set_image(imagem_hover(fundo.rect.size))
+
+        else:
+            fundo.set_image(imagem_normal(fundo.rect.size))
 
     #escala
     def sx(self, valor):
@@ -54,6 +87,7 @@ class InterfaceMistura:
         #itens do inventario
         self.botoes_itens = {}
         self.icones_itens = []
+        self.fundos_botoes = {}
 
         itens = list(jogador.inventario.itens)
 
@@ -83,57 +117,44 @@ class InterfaceMistura:
             )
 
             self.icones_itens.append(icone)
-
-            #botao
-            botao = pygame_gui.elements.UIButton(
-                relative_rect=pygame.Rect(
-                    self.sx(x + 63),
-                    self.sy(y),
-                    self.sx(227),
-                    self.sy(65)
-                ),
-                text=item.nome,
-                manager=self.game.gerente_ui
+ 
+            rect_botao = pygame.Rect(
+                self.sx(x + 63),
+                self.sy(y), 
+                self.sx(227), 
+                self.sy(65)
             )
-
+            botao = self._criar_botao(rect_botao, item.nome)
             self.botoes_itens[botao] = item
 
-        #botao misturar
-        self.botao_misturar = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect(
-                self.sx(500),
-                self.sy(670),
-                self.sx(190),
-                self.sy(55)
-            ),
-            text="MISTURAR",
-            manager=self.game.gerente_ui
+        rect_misturar = pygame.Rect(
+            self.sx(500), 
+            self.sy(670), 
+            self.sx(190), 
+            self.sy(55)
         )
+        self.botao_misturar = self._criar_botao(rect_misturar, "MISTURAR")
 
-        #botao sair
-        self.botao_fechar = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect(
-                self.sx(1030),
-                self.sy(670),
-                self.sx(190),
-                self.sy(55)
-            ),
-            text="SAIR",
-            manager=self.game.gerente_ui
+        rect_fechar = pygame.Rect(
+            self.sx(1030), 
+            self.sy(670), 
+            self.sx(190), 
+            self.sy(55)
         )
-
-        #feedback
+        self.botao_fechar = self._criar_botao(rect_fechar, "SAIR")
+ 
+        # feedback
         self.label_feedback = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect(
-                self.sx(480),
-                self.sy(610),
-                self.sx(410),
+                self.sx(480), 
+                self.sy(610), 
+                self.sx(410), 
                 self.sy(45)
             ),
             text="",
             manager=self.game.gerente_ui
         )
-
+      
 
     def atualizar_selecionados(self, selecionados):
         self.limpar_selecionados()
@@ -204,13 +225,18 @@ class InterfaceMistura:
         for icone in self.icones_itens:
             icone.kill()
 
+        for fundo in self.fundos_botoes.values():
+            fundo.kill()
+
         self.limpar_selecionados()
 
         self.fundo = None
         self.label_feedback = None
+        self.botao_misturar = None
         self.botao_fechar = None
         self.botoes_itens.clear()
         self.icones_itens.clear()
+        self.fundos_botoes.clear()
 
     def fechar(self):
         self.limpar()

@@ -88,6 +88,18 @@ class MesaMistura(ObjetoMapa):
         if not self.aberta:
             return
 
+        if evento.type == pygame_gui.UI_BUTTON_ON_HOVERED:
+            item = self.ui.botoes_itens.get(evento.ui_element)
+            selecionado = item in self.selecionados if item is not None else False
+            self.ui.atualizar_visual_botao(evento.ui_element, hover=True, selecionado=selecionado)
+            return
+
+        if evento.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
+            item = self.ui.botoes_itens.get(evento.ui_element)
+            selecionado = item in self.selecionados if item is not None else False
+            self.ui.atualizar_visual_botao(evento.ui_element, hover=False, selecionado=selecionado)
+            return 
+
         if evento.type != pygame_gui.UI_BUTTON_PRESSED:
             return
 
@@ -110,8 +122,8 @@ class MesaMistura(ObjetoMapa):
         #remover se ja tiver selecionado
         if item_clicado in self.selecionados:
             self.selecionados.remove(item_clicado)
+            self.ui.atualizar_visual_botao(evento.ui_element, hover=False, selecionado=False)
 
-            evento.ui_element.unselect()
 
         #adicionar
         else:
@@ -120,7 +132,7 @@ class MesaMistura(ObjetoMapa):
                 return
 
             self.selecionados.append(item_clicado)
-            evento.ui_element.select()
+            self.ui.atualizar_visual_botao(evento.ui_element, hover=False, selecionado=True)
 
         self.ui.atualizar_selecionados(self.selecionados)
 
@@ -163,7 +175,7 @@ class MesaMistura(ObjetoMapa):
 
     def _limpar_selecao(self):
         for botao in self.ui.botoes_itens:
-            botao.unselect()
+            self.ui.atualizar_visual_botao(botao, hover=False, selecionado=False)
 
         self.selecionados.clear()
         self.ui.atualizar_selecionados(self.selecionados)

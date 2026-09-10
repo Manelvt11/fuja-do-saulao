@@ -12,6 +12,7 @@ import os
 import pygame_gui
 from sistema_itens_mistura.mesa_mistura import MesaMistura
 from sistema_itens_mistura.porta import Porta
+from tema_ui import montar_tema
 
 #tamanho da janela que o jogador vê (viewport), não é mais o tamanho do mapa
 LARGURA_VIEWPORT = 800
@@ -37,7 +38,12 @@ class Game:
 
         pygame.display.set_caption("Fuja do Saulão")
 
-        self.gerente_ui = pygame_gui.UIManager((self.largura_tela, self.altura_tela))
+        caminho_tema = montar_tema(BASE_DIR)
+        self.gerente_ui = pygame_gui.UIManager((self.largura_tela, self.altura_tela), caminho_tema)
+        self.gerente_ui.preload_fonts([
+            {'name': 'arial', 'point_size': 18, 'style': 'bold', 'antialiased': '1'}
+        ])
+
         self.mesa_mistura = MesaMistura(464, 800)
         self.porta = Porta(446, 870)
 
