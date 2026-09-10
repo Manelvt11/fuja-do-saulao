@@ -79,10 +79,10 @@ class Tela:
 
             self.desenhar_fundo()
 
-            sombra = pygame.Surface((280, 220), pygame.SRCALPHA)
-            sombra.fill((0, 0, 0, 130))
-
-            self.tela.blit(sombra, (self.largura // 2 - 140, 400))
+            #sombra = pygame.Surface((280, 220), pygame.SRCALPHA)
+            #sombra.fill((0, 0, 0, 130))
+#
+            #self.tela.blit(sombra, (self.largura // 2 - 140, 400))
             
             self.gerenciador.draw_ui(self.tela)
 
