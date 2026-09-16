@@ -45,7 +45,19 @@ class HUD:
 
         self.tamanho_icone = 48
 
-    def desenhar(self, tela, jogador):
+        self.fonte_tempo = pygame.font.Font(None, 32)
+
+    def desenhar(self, tela, jogador, tempo_restante):
+        minutos = int(tempo_restante // 60)
+        segundos = int(tempo_restante % 60)
+        texto_tempo = f"{minutos:02d}:{segundos:02d}"
+
+        tempo = self.fonte_tempo.render(texto_tempo, True, (255, 255, 255))
+        rect_tempo = tempo.get_rect()
+        rect_tempo.top = 20
+        rect_tempo.right = 780
+        tela.blit(tempo, rect_tempo)
+
         if jogador.vida < self.vida_anterior:
             self.animando = True
             self.frame_atual = 0

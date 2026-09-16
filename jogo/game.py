@@ -119,6 +119,8 @@ class Game:
         self.tempo_morte = 0
         self.fade = 0
 
+        self.tempo_restante = 7 * 60
+
         self.tela_morte = pygame.image.load(
             os.path.join(BASE_DIR, "assets", "telas", "tela_morte.jpeg")
         ).convert()
@@ -187,6 +189,18 @@ class Game:
 
         if self.diario_aberto:
             return
+
+        if self.estado == Estado.JOGANDO:
+            self.tempo_restante -= dt
+
+            if self.tempo_restante <= 0:
+                self.tempo_restante = 0
+                self.estado = Estado.MORTE
+                self.tempo_morte = 0
+                self.fade = 0
+                pygame.mixer.music.fadeout(1000)
+                self.grito_iniciado = False
+                return
 
         if self.estado == Estado.MORTE:
             self.tempo_morte += dt
@@ -258,9 +272,9 @@ class Game:
         )
         self.tela_base.blit(recorte_escalado, (0, 0))
 
-        # HUD e lanterna só aparecem durante o jogo normal (somem na cutscene de vitória)
+        # HUD e lanterna só aparecem durante o jogo normal
         if self.estado != Estado.VITORIA:
-            self.hud.desenhar(self.tela_base, self.player)
+            self.hud.desenhar(self.tela_base, self.player, self.tempo_restante)
 
             px_tela, py_tela = self.camera.mundo_para_tela(
                 self.player.rect.centerx, self.player.rect.centery
