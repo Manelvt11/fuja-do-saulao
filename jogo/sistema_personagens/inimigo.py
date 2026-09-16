@@ -4,7 +4,7 @@ from sistema_personagens.personagens import Personagem
 from sistema_personagens.ia_saulao import SaulaoIA
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Classe Filha
 # A classe Saulao também herda características da classe Personagem
@@ -23,7 +23,7 @@ class Saulao(Personagem):
         self.frame_altura = 256
         self.frames_por_linha = 6
 
-        caminho = os.path.join( BASE_DIR, "..", "assets", "inimigo", "spritesaulao.png")
+        caminho = os.path.join( BASE_DIR, "assets", "inimigos", "saulao", "spritesaulao.png")
         self.spritesheet = pygame.image.load(caminho).convert_alpha()
 
         self.glow_raio = 26  # também reduzi um pouco o tamanho, ajuste ao gosto

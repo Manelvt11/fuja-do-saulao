@@ -14,6 +14,7 @@ from sistema_itens_mistura.mesa_mistura import MesaMistura
 from sistema_itens_mistura.porta import Porta
 from tema_ui import montar_tema
 from sistema_diario.diario import Diario
+from sistema_menu.tela_vitoria import TelaVitoria
 
 #tamanho da janela que o jogador vê (viewport), não é mais o tamanho do mapa
 LARGURA_VIEWPORT = 800
@@ -64,13 +65,7 @@ class Game:
         self.saulao = Saulao(200, 200, velocidade=1.0)
 
         #cena de vitoria
-        self.fase_vitoria = None
-        self.tempo_fase_vitoria = 0.0
-        self.pos_alvo_benicio = None
-        self.pos_alvo_saulao = None
-        self.fade_vitoria = 0
-        self.fonte_vitoria_titulo = pygame.font.SysFont("georgia", 54, bold=True)
-        self.fonte_vitoria_sub = pygame.font.SysFont("georgia", 22)
+        self.tela_vitoria = TelaVitoria(self.tela, self.clock, self.largura_tela, self.altura_tela)
 
         self.hud = HUD()
 
@@ -212,7 +207,6 @@ class Game:
             return
 
         if self.estado == Estado.VITORIA:
-            self.atualizar_cena_vitoria(dt)
             return
 
         if self.mesa_mistura.aberta:
@@ -296,27 +290,6 @@ class Game:
                 )
                 self.tela_base.blit(imagem, (0, 0))
 
-        # overlay final da cutscene de vitória (só aparece quando ela "congela")
-        if self.estado == Estado.VITORIA and self.fase_vitoria == "congelado":
-            overlay = pygame.Surface((LARGURA_VIEWPORT, ALTURA_VIEWPORT), pygame.SRCALPHA)
-            overlay.fill((0, 0, 0, self.fade_vitoria))
-            self.tela_base.blit(overlay, (0, 0))
-
-            alpha_texto = min(255, int(self.fade_vitoria * 1.5))
-            titulo = self.fonte_vitoria_titulo.render("PARABÉNS!", True, (255, 240, 210))
-            subtitulo = self.fonte_vitoria_sub.render("Você venceu!", True, (230, 220, 210))
-            titulo.set_alpha(alpha_texto)
-            subtitulo.set_alpha(alpha_texto)
-
-            self.tela_base.blit(
-                titulo,
-                titulo.get_rect(center=(LARGURA_VIEWPORT // 2, ALTURA_VIEWPORT // 2 - 20)),
-            )
-            self.tela_base.blit(
-                subtitulo,
-                subtitulo.get_rect(center=(LARGURA_VIEWPORT // 2, ALTURA_VIEWPORT // 2 + 30)),
-            )
-
         tela_escalada = pygame.transform.scale(self.tela_base, (self.largura_tela, self.altura_tela))
         self.tela.blit(tela_escalada, (0, 0))
 
@@ -338,59 +311,10 @@ class Game:
                     item.coletado = True
                 return
 
-    def iniciar_cena_vitoria(self):
+    def iniciar_vitoria(self):
         self.estado = Estado.VITORIA
-        self.fase_vitoria = "correndo"
-        self.tempo_fase_vitoria = 0.0
-        self.pos_inicial_benicio = (self.player.rect.x, self.player.rect.y)
-
-        # ponto um pouco além da porta
-        self.pos_alvo_benicio = (self.porta.rect.centerx + 120, self.porta.rect.centery)
-        self.pos_alvo_saulao = (self.porta.rect.centerx, self.porta.rect.centery)
-
+        self.rodando = False
         pygame.mixer.music.fadeout(1000)
-
-    def atualizar_cena_vitoria(self, dt):
-        self.tempo_fase_vitoria += dt
-
-        if self.fase_vitoria == "correndo":
-            duracao = 1.6
-            t = min(self.tempo_fase_vitoria / duracao, 1.0)
-
-            x0, y0 = self.pos_inicial_benicio
-            x1, y1 = self.pos_alvo_benicio
-            self.player.rect.x = int(x0 + (x1 - x0) * t)
-            self.player.rect.y = int(y0 + (y1 - y0) * t)
-
-            dx, dy = x1 - x0, y1 - y0
-            if abs(dx) > abs(dy):
-                self.player.direcao = "direita" if dx > 0 else "esquerda"
-            else:
-                self.player.direcao = "baixo" if dy > 0 else "cima"
-
-            self.player.animar(True)
-            self.camera.atualizar(self.player.rect)
-
-            if t >= 1.0:
-                self.fase_vitoria = "saulao_aparece"
-                self.tempo_fase_vitoria = 0.0
-                self.saulao.rect.x, self.saulao.rect.y = self.pos_alvo_saulao
-                self.saulao.direcao = "baixo"
-                self.saulao.frame_atual = 0
-
-        elif self.fase_vitoria == "saulao_aparece":
-            duracao = 0.9
-            self.player.animar(False)  #Benício parado, olhando pra trás
-            self.camera.atualizar(self.player.rect)
-
-            if self.tempo_fase_vitoria >= duracao:
-                self.fase_vitoria = "congelado"
-                self.tempo_fase_vitoria = 0.0
-                self.fade_vitoria = 0
-
-        elif self.fase_vitoria == "congelado":
-            self.fade_vitoria = min(self.fade_vitoria + 4, 200)
-        
 
     def rodar(self):
         tela_inicial = TelaInicial(
@@ -414,3 +338,6 @@ class Game:
             self.tratar_eventos()
             self.atualizar(dt)
             self.desenhar()
+
+        if self.estado == Estado.VITORIA:
+            self.tela_vitoria.executar()
