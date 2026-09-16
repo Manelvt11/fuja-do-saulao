@@ -13,6 +13,7 @@ import pygame_gui
 from sistema_itens_mistura.mesa_mistura import MesaMistura
 from sistema_itens_mistura.porta import Porta
 from tema_ui import montar_tema
+from sistema_diario.diario import Diario
 
 #tamanho da janela que o jogador vê (viewport), não é mais o tamanho do mapa
 LARGURA_VIEWPORT = 800
@@ -72,6 +73,9 @@ class Game:
         self.fonte_vitoria_sub = pygame.font.SysFont("georgia", 22)
 
         self.hud = HUD()
+
+        self.diario = Diario(self.tela_base, self.clock)
+        self.diario_aberto = False
 
         ZOOM = 2.6
 
@@ -138,6 +142,23 @@ class Game:
 
     def tratar_eventos(self):
         for evento in pygame.event.get():
+            if self.diario_aberto:
+                if evento.type == pygame.QUIT:
+                    self.rodando = False
+
+                elif evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_ESCAPE:
+                        self.diario_aberto = False
+
+                    elif evento.key == pygame.K_RIGHT:
+                        if self.diario.pagina_atual + 2 < len(self.diario.paginas):
+                            self.diario.pagina_atual += 2
+
+                    elif evento.key == pygame.K_LEFT:
+                        if self.diario.pagina_atual - 2 >= 0:
+                            self.diario.pagina_atual -= 2
+                continue
+
             self.gerente_ui.process_events(evento)
             self.mesa_mistura.processar_evento(evento)
 
@@ -147,6 +168,10 @@ class Game:
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:
                     self.rodando = False
+
+                elif evento.key == pygame.K_F1:
+                    if self.estado == Estado.JOGANDO:
+                        self.diario_aberto = True
 
                 elif evento.key == pygame.K_e:
                     if self.estado != Estado.JOGANDO:
@@ -161,8 +186,12 @@ class Game:
                     else:
                         self.coletar_item()
 
+
     def atualizar(self, dt):
         self.gerente_ui.update(dt)
+
+        if self.diario_aberto:
+            return
 
         if self.estado == Estado.MORTE:
             self.tempo_morte += dt
@@ -288,16 +317,14 @@ class Game:
                 subtitulo.get_rect(center=(LARGURA_VIEWPORT // 2, ALTURA_VIEWPORT // 2 + 30)),
             )
 
-        # escala tudo pra resolução real da tela (fullscreen)
-        tela_escalada = pygame.transform.scale(
-            self.tela_base,
-            (self.largura_tela, self.altura_tela)
-        )
-
+        tela_escalada = pygame.transform.scale(self.tela_base, (self.largura_tela, self.altura_tela))
         self.tela.blit(tela_escalada, (0, 0))
 
-        # UI do pygame_gui (mesa de mistura) sempre por cima de tudo, sem escalar
-        self.gerente_ui.draw_ui(self.tela)
+        if self.diario_aberto:
+            fundo = self.tela.copy()
+            self.diario.desenhar(self.tela, fundo)
+        else:
+            self.gerente_ui.draw_ui(self.tela)
 
         pygame.display.flip()
 
