@@ -5,11 +5,9 @@ class Inventario:
 
     def adicionar_item(self, item):
         if self.esta_cheio():
-            print("Inventário cheio!")
             return False
     
         self.itens.append(item)
-        print(f"{item.nome} adicionado ao inventário")
         return True
     
     def remover_item(self, item):

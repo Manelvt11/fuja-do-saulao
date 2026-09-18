@@ -87,16 +87,8 @@ class Game:
         )
 
         self.itens = [
-            Item("Hidrogênio", 290, 300),
-            Item("Oxigênio", 520, 510),
-            Item("Oxigênio", 352, 644),
-            Item("Oxigênio", 296, 236),
-            Item("Enxofre", 700, 340),
-            Item("Cloro", 180, 420),
-            Item("Carbono", 500, 420),
-            Item("Sódio", 650, 350),
-            Item("Bromo", 164, 168),
-            Item("Ferro", 700, 850),
+            Item(nome, x, y)
+            for nome,x,y in self.mapa.itens
         ]
 
         self.raio_luz = 110
@@ -182,6 +174,12 @@ class Game:
 
                     else:
                         self.coletar_item()
+
+                elif evento.key == pygame.K_q:
+                    if self.estado != Estado.JOGANDO:
+                        continue
+
+                    self.dropar_item()
 
 
     def atualizar(self, dt):
@@ -324,6 +322,15 @@ class Game:
                 if self.player.inventario.adicionar_item(item):
                     item.coletado = True
                 return
+
+    def dropar_item(self):
+        if not self.player.inventario.itens:
+            return
+
+        item = self.player.inventario.itens[-1]
+        self.player.inventario.remover_item(item)
+        item.coletado = False
+        item.rect.center = self.player.rect.center
 
     def iniciar_vitoria(self):
         self.estado = Estado.VITORIA

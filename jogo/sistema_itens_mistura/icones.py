@@ -16,6 +16,10 @@ MAPA_ARQUIVOS = {
     "Sódio": "sodio.png",
     "Água": "agua.png",
     "Bromo": "bromo.png",
+    "Ferro": "ferro.png",
+    "Rubídio": "rubidio.png",
+    "Nitrogênio": "nitrogenio.png",
+    "Aldeído": "aldeido.png",
     "Dióxido de Enxofre": "dioxidoEnxofre.png",
     "Trióxido de Enxofre": "trioxidoEnxofre.png",
     "Ácido Sulfúrico": "AcidoSulfurico.png",
@@ -27,11 +31,33 @@ def _criar_icone_padrao(tamanho):
     pygame.draw.rect(superficie, (150,150,150), (0,0, tamanho, tamanho), border_radius=6)
     return superficie
 
-def obter_icone(nome, tamanho=40):
+def _padronizar_icone(original, tamanho):
+    mascara = pygame.mask.from_surface(original)
+    area = mascara.get_bounding_rects()
+
+    if not area:
+        return _criar_icone_padrao(tamanho)
+
+    area = area[0]
+
+    icone = original.subsurface(area).copy()
+    tamanho_desenho = int(tamanho * 0.50)
+    largura, altura = icone.get_size()
+    escala = min(tamanho_desenho / largura, tamanho_desenho / altura)
+    nova_largura = max(1, int(largura * escala))
+    nova_altura = max(1, int(altura * escala))
+    icone = pygame.transform.smoothscale(icone, (nova_largura, nova_altura))
+    superficie = pygame.Surface((tamanho, tamanho), pygame.SRCALPHA)
+    x = (tamanho - nova_largura) //2 
+    y= (tamanho - nova_altura) // 2
+    superficie.blit(icone, (x, y))
+    return superficie
+
+def obter_icone(nome, tamanho=40, reduzir=True):
     #retorna icone correspondente ao item
     #se o icone ja tiver sido carregado anteriormente, usa a versao armazenada no cache
     #caso o item não possua imagem cadastrada, retorna um ícone padrão
-    chave = (nome, tamanho)
+    chave = (nome, tamanho, reduzir)
 
     if chave in _cache_icones:
         return _cache_icones[chave]
@@ -53,7 +79,10 @@ def obter_icone(nome, tamanho=40):
             superficie = _criar_icone_padrao(tamanho)
 
         else:
-            superficie = pygame.transform.smoothscale(original,(tamanho, tamanho))
+            if reduzir:
+                superficie = _padronizar_icone(original, tamanho)
+            else:
+                superficie = pygame.transform.smoothscale(original, (tamanho, tamanho))
 
     _cache_icones[chave] = superficie
 

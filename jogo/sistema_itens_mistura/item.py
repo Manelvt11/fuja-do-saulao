@@ -5,7 +5,8 @@ class Item:
     #aparece no mapa e é coletado pelo jogador
     def __init__(self, nome, x, y, tamanho=48):
         self.nome = nome
-        self.rect = pygame.Rect(x, y, tamanho, tamanho)
+        self.rect = pygame.Rect(0, 0, tamanho, tamanho)
+        self.rect.center = (x, y)
         self.coletado = False
         self.imagem = obter_icone(nome, tamanho=tamanho)
 

@@ -38,9 +38,9 @@ class HUD:
         )
 
         self.posicoes_slots = [
-            (54, 61),
-            (110, 61),
-            (166, 61)
+            (55, 64),
+            (110, 64),
+            (165, 64)
         ]
 
         self.tamanho_icone = 48
@@ -101,7 +101,7 @@ class HUD:
 
             slot_x, slot_y = self.posicoes_slots[i]
 
-            icone = obter_icone(item.nome, tamanho=self.tamanho_icone)
+            icone = obter_icone(item.nome, tamanho=self.tamanho_icone, reduzir=False)
 
             icone_x = (x_inventario + slot_x - self.tamanho_icone // 2)
 

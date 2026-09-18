@@ -9,6 +9,12 @@ class Map:
         caminho_tmx = os.path.join(BASE_DIR, "assets", "cenario", "laboratorio", "laboratorio-tiled.tmx")
         self.tmx = pytmx.load_pygame(caminho_tmx)
 
+        self.itens = []
+
+        camada_itens = self.tmx.get_layer_by_name("itens")
+        for obj in camada_itens:
+            self.itens.append((obj.name, obj.x, obj.y))
+
         #tamanho do mundo agora vem direto do próprio mapa (tiles x tamanho do tile)
         self.largura = self.tmx.width * self.tmx.tilewidth
         self.altura = self.tmx.height * self.tmx.tileheight

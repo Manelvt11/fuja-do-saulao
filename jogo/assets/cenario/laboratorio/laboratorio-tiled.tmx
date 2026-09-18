@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="227">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="267">
  <layer id="1" name="mapa" width="32" height="32">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -192,7 +192,7 @@
   <object id="176" x="943.333" y="438.667" width="50.6667" height="42.6667"/>
   <object id="177" x="968.667" y="362.667" width="25.3333" height="76.6667"/>
   <object id="178" x="964.667" y="420" width="3.33333" height="16.6667"/>
-  <object id="179" x="839.333" y="373.333" width="87.3333" height="26"/>
+  <object id="179" x="839.333" y="368.333" width="87.3333" height="26"/>
   <object id="180" x="791.333" y="372" width="46.6667" height="6.66667"/>
   <object id="181" x="723.333" y="401.333" width="20" height="36"/>
   <object id="182" x="759.333" y="441.333" width="50.6667" height="15.3333"/>
@@ -217,8 +217,8 @@
   <object id="207" x="348.667" y="350.667" width="102.667" height="9.33333"/>
   <object id="208" x="350.667" y="360" width="22" height="32"/>
   <object id="209" x="272" y="346.667" width="25.3333" height="42.6667"/>
-  <object id="210" x="252" y="377.333" width="17.3333" height="28"/>
-  <object id="211" x="253.333" y="433.333" width="16" height="18.6667"/>
+  <object id="210" x="254" y="369.666" width="17.3333" height="28"/>
+  <object id="211" x="253.333" y="441" width="16" height="18.6667"/>
   <object id="212" x="252" y="466.667" width="16" height="20"/>
   <object id="213" x="232" y="708" width="68.6667" height="44.6667"/>
   <object id="214" x="168.667" y="720.667" width="28.6667" height="30.6667"/>
@@ -227,5 +227,28 @@
   <object id="221" x="722.333" y="378.667" width="28.3333" height="22.6667"/>
   <object id="224" x="390.333" y="155.667" width="107.667" height="47"/>
   <object id="225" x="547" y="438" width="33.5" height="15.5"/>
+ </objectgroup>
+ <objectgroup id="4" name="itens">
+  <object id="230" name="Oxigênio" type="item" x="65" y="504.5" width="14.5" height="13.25"/>
+  <object id="231" name="Oxigênio" type="item" x="683.636" y="181.545" width="16.1818" height="13.0909"/>
+  <object id="232" name="Oxigênio" type="item" x="835" y="771" width="15.75" height="14.25"/>
+  <object id="235" name="Enxofre" type="item" x="676.818" y="521.182" width="12.7273" height="13.2727"/>
+  <object id="239" name="Cloro" type="item" x="979" y="174" width="21.5" height="18.25"/>
+  <object id="240" name="Hidrogênio" type="item" x="527.75" y="253" width="10" height="10"/>
+  <object id="241" name="Carbono" type="item" x="51.0909" y="206.182" width="13.0909" height="14.9091"/>
+  <object id="243" name="Sódio" type="item" x="518.818" y="506.909" width="15.0909" height="12.9091"/>
+  <object id="244" name="Ferro" type="item" x="597.75" y="838.25" width="13.5" height="15.5"/>
+  <object id="245" name="Ferro" type="item" x="270.667" y="157.667" width="15.6667" height="16.6667"/>
+  <object id="247" name="Bromo" type="item" x="900.545" y="427.545" width="12.9091" height="11.6364"/>
+  <object id="251" name="Rubídio" type="item" x="392.25" y="215.25" width="19.5" height="11.5"/>
+  <object id="252" name="Aldeído" type="item" x="890.25" y="620.5" width="8" height="8"/>
+  <object id="253" name="Rubídio" type="item" x="789" y="422.5" width="15" height="12.25"/>
+  <object id="255" name="Nitrogênio" type="item" x="85.3333" y="120.333" width="5" height="5"/>
+  <object id="256" name="Nitrogênio" type="item" x="889.667" y="232" width="11.6667" height="16"/>
+  <object id="257" name="Carbono" x="364.333" y="616.667" width="7" height="7"/>
+  <object id="258" name="Carbono" type="item" x="375.333" y="605.667" width="7" height="7"/>
+  <object id="259" name="Carbono" type="item" x="378.333" y="620.333" width="7" height="7"/>
+  <object id="260" name="Rubídio" type="item" x="96" y="611" width="15.5" height="15.25"/>
+  <object id="261" name="Ferro" type="item" x="104" y="636.5" width="15" height="12.25"/>
  </objectgroup>
 </map>
