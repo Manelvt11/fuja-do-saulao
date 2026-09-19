@@ -231,9 +231,7 @@ class Game:
         )
 
         self.saulao.atualizar_ia(self.player, self.mapa)
-    
-        if self.saulao.verificar_colisao_jogador(self.player):
-            self.player.receber_dano()
+        self.saulao.atualizar_animacao(self.player)
     
         if self.player.vida <= 0:
             self.estado = Estado.MORTE

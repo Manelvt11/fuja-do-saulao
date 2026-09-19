@@ -1,5 +1,6 @@
 import pygame
 import heapq
+from sistema_personagens.estado_saulao import EstadoSaulao
 
 class SaulaoIA:
     def __init__(self, saulao):
@@ -11,11 +12,26 @@ class SaulaoIA:
 
         self.intervalo_rota = 20
         self.tempo_rota = 0
+        self.cooldown_ataque = 0
 
     def atualizar(self, jogador, mapa):
-        self.tempo_rota += 1
-
         tile = mapa.tile_size
+
+        distancia = pygame.Vector2(jogador.rect.center).distance_to(self.saulao.rect.center)
+
+        if self.saulao.estado == EstadoSaulao.ATACANDO:
+            return
+
+        if self.cooldown_ataque > 0:
+            self.cooldown_ataque -= 1
+
+        self.saulao.mudar_estado(EstadoSaulao.PERSEGUINDO)
+
+        if distancia < tile * 0.5 and self.cooldown_ataque == 0:
+            self.saulao.mudar_estado(EstadoSaulao.ATACANDO)
+            return
+
+        self.tempo_rota += 1
 
         inicio = (
             self.saulao.rect.centerx // tile,
@@ -26,11 +42,6 @@ class SaulaoIA:
             jogador.rect.centerx // tile,
             jogador.rect.centery // tile
         )
-
-        # Se estiver perto, vai direto para o jogador
-        distancia = pygame.Vector2(
-            jogador.rect.center
-        ).distance_to(self.saulao.rect.center)
 
         if distancia < tile * 2:
             dx = jogador.rect.centerx - self.saulao.rect.centerx
@@ -151,8 +162,6 @@ class SaulaoIA:
             movimento_x,
             movimento_y
         )
-
-        self.saulao.animar(True)
 
     def _calcular_rota(self, inicio, alvo, mapa):
         if not self._celula_livre(alvo[0], alvo[1], mapa):
