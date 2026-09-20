@@ -30,6 +30,8 @@ class Personagem:
             "direita": 3
         }
 
+        self.rect_corpo = pygame.Rect(self.rect.centerx - 10, self.rect.bottom - 8, 20, 8)
+
     def mover(self, dx, dy, obstaculos, largura_mapa=800, altura_mapa=600):
         #posição anterior para verificar colisões
         antigo_x = self.pos_x
@@ -60,8 +62,7 @@ class Personagem:
         self.pos_y = max(0, min(self.pos_y, altura_mapa - self.rect.height))
         
         # atualiza o Rect
-        self.rect.x = int(self.pos_x)
-        self.rect.y = int(self.pos_y)
+        self.atualizar_posicao_rect()
 
     def animar(self, andando):
         if andando:
@@ -80,3 +81,17 @@ class Personagem:
 
         elif dy != 0:
             self.direcao = "baixo" if dy > 0 else "cima"
+
+    def desenhar_sombra(self, tela, largura=36, altura=14, alpha=100):
+        sombra = pygame.Surface((largura, altura), pygame.SRCALPHA)
+        pygame.draw.ellipse(sombra, (0, 0, 0, 100), sombra.get_rect())
+        tela.blit(sombra, (self.rect.centerx - largura // 2, self.rect.bottom - 4))
+
+    def atualizar_rect_corpo(self):
+        self.rect_corpo.centerx = self.rect.centerx
+        self.rect_corpo.bottom = self.rect.bottom
+
+    def atualizar_posicao_rect(self):
+        self.rect.x = int(self.pos_x)
+        self.rect.y = int(self.pos_y)
+        self.atualizar_rect_corpo()

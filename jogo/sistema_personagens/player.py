@@ -27,6 +27,9 @@ class Benício(Personagem):
         spritesheet = os.path.join(BASE_DIR, "assets", "player", "spritesheet.png")
         self.spritesheet = pygame.image.load(spritesheet).convert_alpha()
 
+        spritesheet_dano = os.path.join(BASE_DIR, "assets", "player", "benicio_dano.png")
+        self.spritesheet_dano = pygame.image.load(spritesheet_dano).convert_alpha()
+
         #vida
         self.vida = 3
         self.cooldown_dano = 0
@@ -50,7 +53,9 @@ class Benício(Personagem):
 
         self.estado = EstadoBenicio.PARADO
         self.tempo_dano = 0
-        self.duracao_dano = 30
+        self.duracao_dano = 32
+        self.frame_dano = 0
+        self.tempo_frame_dano = 0
 
     #movimentacao com teclado
     def controlar(self, obstaculos, largura_mapa=800, altura_mapa=600):
@@ -126,17 +131,41 @@ class Benício(Personagem):
         self.estado = novo_estado
 
         if novo_estado == EstadoBenicio.DANO:
-            self.tempo_dano = 0
+            self.frame_dano = 0
+            self.tempo_frame_dano = 0
 
     def atualizar_estado(self):
-        if self.estado == EstadoBenicio.DANO:
-            self.tempo_dano += 1
+        if self.estado != EstadoBenicio.DANO:
+            return
 
-            if self.tempo_dano >= self.duracao_dano:
-                self.tempo_dano = 0
-                self.mudar_estado(EstadoBenicio.PARADO)
+        self.tempo_frame_dano += 1
+
+        duracoes = [5, 5, 6, 8, 10, 10, 7, 7]
+        if self.tempo_frame_dano >= duracoes[self.frame_dano]:
+            self.tempo_frame_dano = 0
+            self.frame_dano += 1
+
+        if self.frame_dano >= 8:
+            self.frame_dano = 0
+            self.mudar_estado(EstadoBenicio.PARADO)
 
     def desenhar(self, tela):
+        if self.estado == EstadoBenicio.DANO:
+            linha = self.direcoes[self.direcao]
+
+            x_frame = self.frame_dano * self.frame_largura
+            y_frame = linha * self.frame_altura
+            frame = self.spritesheet_dano.subsurface((x_frame, y_frame, self.frame_largura, self.frame_altura))
+            imagem = pygame.transform.scale(frame, (SPRITE_LARGURA, SPRITE_ALTURA))
+            imagem.set_alpha(230)
+
+            offset_x = -5
+            imagem_rect = imagem.get_rect(midbottom=(self.rect.centerx + offset_x, self.rect.bottom))
+            tela.blit(imagem, imagem_rect)
+
+            self.desenhar_sombra(tela)
+            return
+
         linha = self.direcoes[self.direcao]
 
         x_frame = self.frame_atual * self.frame_largura
@@ -159,10 +188,7 @@ class Benício(Personagem):
         tela.blit(imagem, imagem_rect)
 
         #sombra
-        sombra = pygame.Surface((36, 14), pygame.SRCALPHA)
-        pygame.draw.ellipse(sombra, (0, 0, 0, 100), sombra.get_rect())
-
-        tela.blit(sombra, (self.rect.centerx - 18, self.rect.bottom - 4))
+        self.desenhar_sombra(tela)
 
         #debug da hitbox
         #pygame.draw.rect(tela, (0, 255, 0), self.rect, 2)

@@ -27,9 +27,12 @@ class SaulaoIA:
 
         self.saulao.mudar_estado(EstadoSaulao.PERSEGUINDO)
 
-        if distancia < tile * 0.5 and self.cooldown_ataque == 0:
-            self.saulao.mudar_estado(EstadoSaulao.ATACANDO)
-            return
+        distancia_parada = 30
+
+        if distancia <= distancia_parada:
+            if self.cooldown_ataque == 0:
+                self.saulao.mudar_estado(EstadoSaulao.ATACANDO)
+                return
 
         self.tempo_rota += 1
 
@@ -43,11 +46,12 @@ class SaulaoIA:
             jogador.rect.centery // tile
         )
 
+        #quando estão próximos usa perseguicao direta
         if distancia < tile * 2:
             dx = jogador.rect.centerx - self.saulao.rect.centerx
             dy = jogador.rect.centery - self.saulao.rect.centery
 
-            self._mover(dx, dy, mapa)
+            self._mover(dx, dy, mapa, jogador)
             return
 
         # Cria uma nova rota quando necessário
@@ -98,9 +102,9 @@ class SaulaoIA:
             dx = destino_x - self.saulao.rect.centerx
             dy = destino_y - self.saulao.rect.centery
 
-        self._mover(dx, dy, mapa)
+        self._mover(dx, dy, mapa, jogador)
 
-    def _mover(self, dx, dy, mapa):
+    def _mover(self, dx, dy, mapa, jogador=None):
 
         direcao = pygame.Vector2(dx, dy)
 
@@ -118,7 +122,17 @@ class SaulaoIA:
         antigo_y = self.saulao.pos_y
 
         # Movimento horizontal
-        self.saulao.pos_x += movimento_x
+        novo_x = self.saulao.pos_x + movimento_x
+        if jogador is not None:
+            distancia_vertical = abs(self.saulao.rect.centery - jogador.rect.centery)
+            alinhado_verticalmente = (distancia_vertical < 14)
+
+            if alinhado_verticalmente:
+                distancia_horizontal = abs(self.saulao.rect.centerx - jogador.rect.centerx)
+
+                if distancia_horizontal < 30:
+                    novo_x = self.saulao.pos_x
+        self.saulao.pos_x = novo_x
         self.saulao.rect.x = int(self.saulao.pos_x)
 
         if any(
@@ -129,7 +143,18 @@ class SaulaoIA:
             self.saulao.rect.x = int(antigo_x)
 
         # Movimento vertical
-        self.saulao.pos_y += movimento_y
+        novo_y = self.saulao.pos_y + movimento_y
+        if jogador is not None:
+            distancia_horizontal = abs(self.saulao.rect.centerx - jogador.rect.centerx)
+            alinhado_horizontalmente = (distancia_horizontal < 14)
+
+            if alinhado_horizontalmente:
+                distancia_vertical = abs(self.saulao.rect.centery - jogador.rect.centery)
+
+                if distancia_vertical < 30:
+                    novo_y = self.saulao.pos_y
+
+        self.saulao.pos_y = novo_y
         self.saulao.rect.y = int(self.saulao.pos_y)
 
         if any(
@@ -139,6 +164,7 @@ class SaulaoIA:
             self.saulao.pos_y = antigo_y
             self.saulao.rect.y = int(antigo_y)
 
+        #limites do mapa
         self.saulao.pos_x = max(
             0,
             min(

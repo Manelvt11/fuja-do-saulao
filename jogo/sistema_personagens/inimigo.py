@@ -170,9 +170,6 @@ class Saulao(Personagem):
         tela.blit(imagem, imagem_rect)
 
         # sombra
-        sombra = pygame.Surface((36, 14), pygame.SRCALPHA)
-        pygame.draw.ellipse(sombra,(0, 0, 0, 100),sombra.get_rect())
-
-        tela.blit(sombra,(self.rect.centerx - 18,self.rect.bottom - 4))
+        self.desenhar_sombra(tela)
         # debug
         # pygame.draw.rect(tela, (255, 0, 0), self.rect, 2)

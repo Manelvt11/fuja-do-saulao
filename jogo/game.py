@@ -205,8 +205,10 @@ class Game:
         self.mesa_mistura.desenhar(self.mundo)
         self.porta.desenhar(self.mundo)
 
-        self.player.desenhar(self.mundo)
-        self.saulao.desenhar(self.mundo)
+        personagens = [self.player, self.saulao]
+        personagens.sort(key=lambda personagem: personagem.rect.bottom)
+        for personagem in personagens:
+            personagem.desenhar(self.mundo)
 
         #debug
         if self.DEBUG:
