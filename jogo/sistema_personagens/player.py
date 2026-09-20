@@ -3,6 +3,7 @@ from sistema_personagens.personagens import Personagem
 import os
 from sistema_itens_mistura.inventario import Inventario
 import random
+from sistema_personagens.estado_benicio import EstadoBenicio
 
 BASE_DIR = os.path.dirname(os.path.dirname((os.path.abspath(__file__))))
 
@@ -47,10 +48,17 @@ class Benício(Personagem):
         self.distancia_desde_ultimo_passo = 0
         self.distancia_por_passo = 40 #pixels percorridos entre um passo e outro
 
+        self.estado = EstadoBenicio.PARADO
+        self.tempo_dano = 0
+        self.duracao_dano = 30
+
     #movimentacao com teclado
     def controlar(self, obstaculos, largura_mapa=800, altura_mapa=600):
         if self.cooldown_dano > 0:
             self.cooldown_dano -= 1
+
+        if self.estado == EstadoBenicio.DANO or self.estado == EstadoBenicio.MORTO:
+            return
 
         teclas = pygame.key.get_pressed()
         movendo = False
@@ -86,13 +94,21 @@ class Benício(Personagem):
             dy = int(dy * 0.92)
 
         super().mover(dx, dy, obstaculos, largura_mapa, altura_mapa)
+        if movendo:
+            self.mudar_estado(EstadoBenicio.ANDANDO)
+        else:
+            self.mudar_estado(EstadoBenicio.PARADO)
 
         self.animar(dx != 0 or dy != 0)
 
     def receber_dano(self):
-        if self.cooldown_dano <= 0:
+        if self.cooldown_dano <= 0 and self.estado != EstadoBenicio.MORTO:
             self.vida -= 1
             self.cooldown_dano = 120 #2 segundos
+            self.mudar_estado(EstadoBenicio.DANO)
+
+            if self.vida <= 0:
+                self.mudar_estado(EstadoBenicio.MORTO)
 
     def tocar_passo(self, distancia_percorrida):
         self.distancia_desde_ultimo_passo += distancia_percorrida
@@ -101,6 +117,24 @@ class Benício(Personagem):
             som = random.choice(self.sons_passo)
             som.play()
             self.distancia_desde_ultimo_passo = 0
+
+    def mudar_estado(self, novo_estado):
+        if self.estado == novo_estado:
+            return
+
+        print(f"Benício: {self.estado.name} -> {novo_estado.name}")
+        self.estado = novo_estado
+
+        if novo_estado == EstadoBenicio.DANO:
+            self.tempo_dano = 0
+
+    def atualizar_estado(self):
+        if self.estado == EstadoBenicio.DANO:
+            self.tempo_dano += 1
+
+            if self.tempo_dano >= self.duracao_dano:
+                self.tempo_dano = 0
+                self.mudar_estado(EstadoBenicio.PARADO)
 
     def desenhar(self, tela):
         linha = self.direcoes[self.direcao]

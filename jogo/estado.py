@@ -1,5 +1,6 @@
-class Estado:
-    MENU="menu"
-    JOGANDO="jogando"
-    MORTE="morte"
-    VITORIA="vitoria"
+from enum import Enum, auto
+
+class Estado(Enum):
+    JOGANDO=auto()
+    DERROTA=auto()
+    VITORIA=auto()

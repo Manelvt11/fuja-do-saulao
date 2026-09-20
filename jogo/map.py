@@ -1,6 +1,7 @@
 import pygame
 import pytmx
 import os
+import random
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -58,7 +59,16 @@ class Map:
         
                     if tile_rect.colliderect(obstaculo):
                         self.grid[y][x] = 0
-    
+
+    def encontrar_posicao_livre(self, largura,altura):
+        while True:
+            x = random.randint(0, self.largura - largura)
+            y = random.randint(0, self.altura - altura)
+            rect = pygame.Rect(x, y, largura, altura)
+
+            if not any(rect.colliderect(obs) for obs in self.obstaculos):
+                return x, y
+
     def desenhar(self, tela):
         tela.blit(self.fundo, (0, 0))
 
