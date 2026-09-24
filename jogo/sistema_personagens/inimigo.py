@@ -3,6 +3,9 @@ import os
 from sistema_personagens.personagens import Personagem
 from sistema_personagens.ia_saulao import SaulaoIA
 from sistema_personagens.estado_saulao import EstadoSaulao
+import math
+from sistema_ambientacao.fumaca_estranheza import FumacaEstranheza
+from sistema_ambientacao.particulas_estranheza import ParticulasEstranheza
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -46,6 +49,9 @@ class Saulao(Personagem):
         caminho = os.path.join( BASE_DIR, "assets", "inimigos", "saulao", "spritesaulao.png")
         self.spritesheet = pygame.image.load(caminho).convert_alpha()
 
+        caminho_estranho = os.path.join(BASE_DIR, "assets", "estranhesaulon", "criaturas", "saulao_estranho", "saulao_estranho.png")
+        self.spritesheet_estranho = pygame.image.load(caminho_estranho).convert_alpha()
+
         caminho_ataque = os.path.join(BASE_DIR, "assets", "inimigos", "saulao", "saulao_atacando.png")
         self.spritesheet_ataque = pygame.image.load(caminho_ataque).convert_alpha()
 
@@ -71,6 +77,13 @@ class Saulao(Personagem):
         self.ia = SaulaoIA(self)
         self.estado = EstadoSaulao.PARADO
         self.dano_aplicado = False
+
+        self.estranhesaulon = False
+        self.tempo_flutuacao = 0.0
+        self.amplitude_flutuacao = 5
+        self.velocidade_flutuacao = 2.5
+        self.fumaca_estranheza = FumacaEstranheza()
+        self.particulas_estranheza = ParticulasEstranheza()
 
     def atualizar_ia(self, jogador, mapa):
         self.ia.atualizar(jogador, mapa)
@@ -139,7 +152,23 @@ class Saulao(Personagem):
             
         return False
 
+    def atualizar_flutuacao(self, dt):
+        if not self.estranhesaulon:
+            self.tempo_flutuacao = 0
+            return
+
+        self.tempo_flutuacao += dt
+        self.fumaca_estranheza.atualizar(dt)
+        self.particulas_estranheza.atualizar(dt)
+
+    def obter_offset_flutuacao(self):
+        return math.sin(self.tempo_flutuacao * self.velocidade_flutuacao) * self.amplitude_flutuacao
+
     def desenhar(self, tela):
+        if self.estranhesaulon:
+            self.desenhar_estranho(tela)
+            return
+
         glow_rect = self.glow.get_rect(center=(self.rect.centerx, self.rect.centery))
 
         tela.blit(self.glow, glow_rect, special_flags=pygame.BLEND_RGBA_ADD)
@@ -173,3 +202,27 @@ class Saulao(Personagem):
         self.desenhar_sombra(tela)
         # debug
         # pygame.draw.rect(tela, (255, 0, 0), self.rect, 2)
+
+    def desenhar_estranho(self, tela):
+        direcoes_estranhas = {
+            "cima": 0,
+            "baixo":1,
+            "esquerda":2,
+            "direita": 3
+        }
+        linha = direcoes_estranhas[self.direcao]
+
+        x_frame = self.frame_atual * self.frame_largura
+        y_frame = linha * self.frame_altura
+        frame = self.spritesheet_estranho.subsurface((x_frame, y_frame, self.frame_largura, self.frame_altura))
+
+        escala_estranha = 0.25
+        imagem = pygame.transform.scale(frame, (int(161 * escala_estranha), int(256 * escala_estranha)))
+
+        offset_y = self.obter_offset_flutuacao()
+
+        imagem_rect = imagem.get_rect(midbottom=(self.rect.centerx, self.rect.bottom + offset_y))
+        tela.blit(imagem, imagem_rect)
+
+        self.fumaca_estranheza.desenhar(tela, self.rect.centerx, self.rect.centery)
+        self.particulas_estranheza.desenhar(tela, self.rect.centerx, self.rect.centery)

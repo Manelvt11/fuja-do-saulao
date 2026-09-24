@@ -16,6 +16,12 @@ class Map:
         for obj in camada_itens:
             self.itens.append((obj.name, obj.x, obj.y))
 
+        self.estranheza = []
+        camada_estranheza = self.tmx.get_layer_by_name("estranheza")
+        for obj in camada_estranheza:
+            self.estranheza.append((obj.x, obj.y))
+
+
         #tamanho do mundo agora vem direto do próprio mapa (tiles x tamanho do tile)
         self.largura = self.tmx.width * self.tmx.tilewidth
         self.altura = self.tmx.height * self.tmx.tileheight

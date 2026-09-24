@@ -17,6 +17,7 @@ from sistema_menu.tela_vitoria import TelaVitoria
 from sistema_personagens.estado_benicio import EstadoBenicio
 from sistema_menu.tela_derrota import TelaDerrota
 from sistema_ambientacao.iluminacao import Iluminacao
+from sistema_ambientacao.fendas_estranheza import FendasEstranheza
 
 #tamanho da janela que o jogador vê (viewport), não é mais o tamanho do mapa
 LARGURA_VIEWPORT = 800
@@ -51,6 +52,8 @@ class Game:
         #mapa
         self.mapa = Map()
 
+        self.fendas_estranheza = FendasEstranheza(self.mapa.estranheza)
+
         #sistemas do mapa
         self.mesa_mistura = MesaMistura(464, 800)
         self.porta = Porta(446, 870)
@@ -65,6 +68,7 @@ class Game:
         x,y = self.mapa.encontrar_posicao_livre(16, 18)
         self.player = Benício(x,y, 1.3)
         self.saulao = Saulao(200, 200, velocidade=1.0)
+        self.saulao.estranhesaulon = True
 
         #telas de resultado
         #cena de vitoria
@@ -107,6 +111,9 @@ class Game:
         self.DEBUG = False
         self.estado = Estado.JOGANDO
         self.tempo_restante = 7 * 60
+
+
+        
 
     def tratar_eventos(self):
         for evento in pygame.event.get():
@@ -172,6 +179,8 @@ class Game:
 
         self.tempo_restante -= dt
 
+        self.fendas_estranheza.atualizar(dt)
+
         if self.tempo_restante <= 0:
             self.tempo_restante = 0
             self.iniciar_derrota()
@@ -193,6 +202,7 @@ class Game:
 
         self.saulao.atualizar_ia(self.player, self.mapa)
         self.saulao.atualizar_animacao(self.player)
+        self.saulao.atualizar_flutuacao(dt)
 
     def desenhar(self):
         #mundo
@@ -204,6 +214,8 @@ class Game:
 
         self.mesa_mistura.desenhar(self.mundo)
         self.porta.desenhar(self.mundo)
+
+        self.fendas_estranheza.desenhar(self.mundo)
 
         personagens = [self.player, self.saulao]
         personagens.sort(key=lambda personagem: personagem.rect.bottom)
