@@ -7,7 +7,7 @@ class FendasEstranheza:
     def __init__(self, posicoes):
         caminho = os.path.join(BASE_DIR, "assets", "estranhesaulon", "efeitos", "fenda.png")
         self.imagem = pygame.image.load(caminho).convert_alpha()
-        self.imagem = pygame.transform.scale_by(self.imagem, 0.10)
+        self.imagem = pygame.transform.scale_by(self.imagem, 0.05)
         self.posicoes = posicoes
 
     def atualizar(self, dt):

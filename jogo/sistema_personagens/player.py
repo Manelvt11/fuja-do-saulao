@@ -106,9 +106,9 @@ class Benício(Personagem):
 
         self.animar(dx != 0 or dy != 0)
 
-    def receber_dano(self):
+    def receber_dano(self,dano=1):
         if self.cooldown_dano <= 0 and self.estado != EstadoBenicio.MORTO:
-            self.vida -= 1
+            self.vida -= dano
             self.cooldown_dano = 120 #2 segundos
             self.mudar_estado(EstadoBenicio.DANO)
 

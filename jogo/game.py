@@ -18,6 +18,8 @@ from sistema_personagens.estado_benicio import EstadoBenicio
 from sistema_menu.tela_derrota import TelaDerrota
 from sistema_ambientacao.iluminacao import Iluminacao
 from sistema_ambientacao.fendas_estranheza import FendasEstranheza
+from sistema_menu.tela_estranha import TelaEstranha
+from sistema_personagens.gnomo import Gnomo
 
 #tamanho da janela que o jogador vê (viewport), não é mais o tamanho do mapa
 LARGURA_VIEWPORT = 800
@@ -64,18 +66,24 @@ class Game:
         self.tela_base = pygame.Surface((LARGURA_VIEWPORT, ALTURA_VIEWPORT))
         self.mundo = pygame.Surface((self.mapa.largura, self.mapa.altura))
 
+        #tela do estranhesaulon
+        self.tela_estranha = TelaEstranha((LARGURA_VIEWPORT, ALTURA_VIEWPORT))
+
         #personagens
         x,y = self.mapa.encontrar_posicao_livre(16, 18)
         self.player = Benício(x,y, 1.3)
         self.saulao = Saulao(200, 200, velocidade=1.0)
-        self.saulao.estranhesaulon = True
+        self.gnomo = Gnomo(x, y)
 
+        self.estranhesaulon_ativo = False
+        self.ativar_estranhesaulon()
         #telas de resultado
         #cena de vitoria
         self.tela_vitoria = TelaVitoria(self.tela, self.clock, self.largura_tela, self.altura_tela)
         #cena de derrota
         self.tela_derrota = TelaDerrota(self.tela, self.clock, self.largura_tela, self.altura_tela)
 
+        
         #interface do jogo
         self.hud = HUD()
 
@@ -111,9 +119,6 @@ class Game:
         self.DEBUG = False
         self.estado = Estado.JOGANDO
         self.tempo_restante = 7 * 60
-
-
-        
 
     def tratar_eventos(self):
         for evento in pygame.event.get():
@@ -203,6 +208,8 @@ class Game:
         self.saulao.atualizar_ia(self.player, self.mapa)
         self.saulao.atualizar_animacao(self.player)
         self.saulao.atualizar_flutuacao(dt)
+        self.tela_estranha.atualizar(dt)
+        self.gnomo.atualizar(self.player, self.mapa)
 
     def desenhar(self):
         #mundo
@@ -217,7 +224,7 @@ class Game:
 
         self.fendas_estranheza.desenhar(self.mundo)
 
-        personagens = [self.player, self.saulao]
+        personagens = [self.player, self.saulao, self.gnomo]
         personagens.sort(key=lambda personagem: personagem.rect.bottom)
         for personagem in personagens:
             personagem.desenhar(self.mundo)
@@ -246,6 +253,8 @@ class Game:
             )
 
             self.iluminacao.aplicar(self.tela_base, px_tela, py_tela)
+
+        self.tela_estranha.desenhar(self.tela_base)
 
         #tela fullscreen
         tela_escalada = pygame.transform.scale(self.tela_base, (self.largura_tela, self.altura_tela))
@@ -288,6 +297,11 @@ class Game:
         self.estado = Estado.DERROTA
         self.rodando = False
         pygame.mixer.music.fadeout(1000)
+
+    def ativar_estranhesaulon(self):
+        self.estranhesaulon_ativo = True
+        self.saulao.estranhesaulon = True
+        self.tela_estranha.ativar()
 
     def rodar(self):
         tela_inicial = TelaInicial(

@@ -17,9 +17,8 @@ class HUD:
             sprite.subsurface((144, 0, 48, 48))
         ]
 
-        self.coracao_vazio = sprite.subsurface(
-            (192, 0, 48, 48)
-        )
+        self.coracao_meio = sprite.subsurface((192, 0, 48, 48))
+        self.coracao_vazio = sprite.subsurface((240, 0, 48, 48))
 
         self.animando = False
         self.frame_atual = 0
@@ -78,16 +77,12 @@ class HUD:
                     self.frame_atual = 0
 
         for i in range(3):
-
-            if self.animando and i == jogador.vida:
-                imagem = self.frames[self.frame_atual]
-
-            elif i < jogador.vida:
+            if i < int(jogador.vida):
                 imagem = self.frames[0]
-
+            elif jogador.vida % 1 == 0.5 and i == int(jogador.vida):
+                imagem = self.coracao_meio
             else:
                 imagem = self.coracao_vazio
-
             tela.blit(imagem, (10 + i * 50, 10))
 
         x_inventario = (tela.get_width() - self.inventario_largura) // 2

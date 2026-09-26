@@ -252,9 +252,9 @@
   <object id="261" name="Ferro" type="item" x="104" y="636.5" width="15" height="12.25"/>
  </objectgroup>
  <objectgroup id="7" name="estranheza">
-  <object id="268" name="fenda" type="fenda" x="814.333" y="478" width="17.3333" height="18"/>
-  <object id="269" name="fenda" type="fenda" x="436" y="639.333" width="22.6667" height="20.6667"/>
-  <object id="270" name="fenda" type="fenda" x="158.667" y="420" width="40" height="39.3333"/>
-  <object id="271" name="fenda" type="fenda" x="125.333" y="175.333" width="28" height="26"/>
+  <object id="268" name="fenda" type="fenda" x="814.333" y="478" width="10" height="10"/>
+  <object id="269" name="fenda" type="fenda" x="436" y="639.333" width="10" height="10"/>
+  <object id="270" name="fenda" type="fenda" x="158.667" y="420" width="10" height="10"/>
+  <object id="271" name="fenda" type="fenda" x="125.333" y="175.333" width="10" height="10"/>
  </objectgroup>
 </map>
