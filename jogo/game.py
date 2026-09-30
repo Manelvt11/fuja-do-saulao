@@ -20,6 +20,7 @@ from sistema_ambientacao.iluminacao import Iluminacao
 from sistema_ambientacao.fendas_estranheza import FendasEstranheza
 from sistema_menu.tela_estranha import TelaEstranha
 from sistema_personagens.gnomo import Gnomo
+from sistema_ambientacao.cogumelo import Cogumelos
 
 #tamanho da janela que o jogador vê (viewport), não é mais o tamanho do mapa
 LARGURA_VIEWPORT = 800
@@ -55,6 +56,7 @@ class Game:
         self.mapa = Map()
 
         self.fendas_estranheza = FendasEstranheza(self.mapa.estranheza)
+        self.cogumelos = Cogumelos(self.mapa.cogumelos)
 
         #sistemas do mapa
         self.mesa_mistura = MesaMistura(464, 800)
@@ -186,6 +188,7 @@ class Game:
         self.tempo_restante -= dt
 
         self.fendas_estranheza.atualizar(dt)
+        self.cogumelos.atualizar(dt)
 
         if self.tempo_restante <= 0:
             self.tempo_restante = 0
@@ -224,6 +227,7 @@ class Game:
         self.porta.desenhar(self.mundo)
 
         self.fendas_estranheza.desenhar(self.mundo)
+        self.cogumelos.desenhar(self.mundo)
 
         personagens = [self.player, self.saulao, self.gnomo]
         personagens.sort(key=lambda personagem: personagem.rect.bottom)
