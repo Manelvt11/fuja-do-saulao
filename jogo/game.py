@@ -73,7 +73,8 @@ class Game:
         x,y = self.mapa.encontrar_posicao_livre(16, 18)
         self.player = Benício(x,y, 1.3)
         self.saulao = Saulao(200, 200, velocidade=1.0)
-        self.gnomo = Gnomo(x, y)
+        x_gnomo, y_gnomo = self.mapa.encontrar_posicao_livre(8, 6)
+        self.gnomo = Gnomo(x_gnomo, y_gnomo)
 
         self.estranhesaulon_ativo = False
         self.ativar_estranhesaulon()

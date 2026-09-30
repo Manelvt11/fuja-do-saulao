@@ -1,16 +1,16 @@
 {
     "button": {
         "colours": {
-            "normal_bg": "#1a1a1a",
-            "hovered_bg": "#16331f",
-            "disabled_bg": "#1a1a1a",
-            "selected_bg": "#0f2b16",
-            "normal_text": "#ffffff",
-            "hovered_text": "#b8ffbf",
+            "normal_bg": "#0d0a12",
+            "hovered_bg": "#21102f",
+            "disabled_bg": "#0d0a12",
+            "selected_bg": "#32134a",
+            "normal_text": "#e8e8e8",
+            "hovered_text": "#ffffff",
             "disabled_text": "#777777",
-            "selected_text": "#82ff96",
-            "normal_border": "#39ff6d",
-            "hovered_border": "#a4ffb5",
+            "selected_text": "#ffffff",
+            "normal_border": "#7624a8",
+            "hovered_border": "#b44cff",
             "disabled_border": "#3a3a3a"
         },
         "misc": {
